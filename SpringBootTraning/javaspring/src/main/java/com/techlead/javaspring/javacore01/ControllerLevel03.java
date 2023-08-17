@@ -1,0 +1,146 @@
+package com.techlead.javaspring.javacore01;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+@RestController
+@RequestMapping("api/v1/java01/lv3")
+public class ControllerLevel03 {
+    @GetMapping("/ex1")
+    public ResponseEntity<?> findTheSecondMinNum(@RequestParam List<Integer> nums) {
+        int min = Integer.MAX_VALUE;
+        int min2 = Integer.MAX_VALUE;
+        for (int num : nums) {
+            if (num < min) {
+                min2 = min;
+                min = num;
+            } else if (min2 > num && num > min) {
+                min2 = num;
+            }
+        }
+
+//        int min = Integer.MAX_VALUE;
+//        int min2 = Integer.MAX_VALUE;
+//        for (int i = 0; i < arrNumber.length ; i++) {
+//            if (min > arrNumber[i]){
+//                min2 = min;
+//                min = arrNumber[i];
+//            } else if (min2 > arrNumber[i] && arrNumber[i] > min) {
+//                min2 = arrNumber[i];
+//            }
+//        }
+        return ResponseEntity.ok(min2);
+    }
+
+    @GetMapping("/ex2")
+    public ResponseEntity<?> maximumDifferenceBetweenAnyTwoElements(@RequestParam List<Integer> nums) {
+        nums.sort(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1.compareTo(o2);
+            }
+        });
+
+        return ResponseEntity.ok(nums.get(nums.size() - 1) - nums.get(0));
+    }
+
+    @GetMapping("/ex3")
+    public ResponseEntity<?> findLongestIncreasingSubsequence(@RequestParam List<Integer> nums) {
+        int n = nums.size();
+
+        int[] dp = new int[n]; // Mảng dp để lưu độ dài của LIS tại mỗi vị trí
+        dp[0] = 1; // Mỗi phần tử tạo thành một LIS có độ dài 1 ban đầu
+
+        int maxLen = 1; // Độ dài của chuỗi con tăng dần dài nhất
+
+        for (int i = 1; i < n; i++) {
+            dp[i] = 1; // Mỗi phần tử tạo thành một LIS có độ dài 1
+            for (int j = 0; j < i; j++) {
+                if (nums.get(i) > nums.get(j)) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            maxLen = Math.max(maxLen, dp[i]);
+        }
+
+        return ResponseEntity.ok(maxLen);
+    }
+
+    @GetMapping("/ex4")
+    public ResponseEntity<?> findMostCommonString(@RequestParam String[] strings) {
+        return ResponseEntity.ok(CountCommonChar.findMostCommonStrings(strings));
+    }
+
+    @GetMapping("/ex5")
+    public ResponseEntity<?> ex5(@RequestParam List<Integer> nums) {
+        Collections.sort(nums);
+        int ketQua = 1;
+        for (int i = 0; i < nums.size() && nums.get(i) <= ketQua; i++) {
+            ketQua += nums.get(i);
+        }
+        return ResponseEntity.ok(ketQua);
+    }
+
+    @GetMapping("/ex6")
+    public ResponseEntity<?> findMedianNumBy2List(@RequestParam List<Integer> listNums,
+                                                  @RequestParam List<Integer> listNums1) {
+        double rs = 0;
+        listNums.addAll(listNums1);
+        Collections.sort(listNums);
+        //System.out.println("- List nums: " + listNums);
+        if (listNums.size() % 2 != 0) {
+            rs = listNums.get(listNums.size()/2);
+        } else {
+            int midNumLeftSide = listNums.get(listNums.size()/2 - 1);
+            int midNumRightSide = listNums.get(listNums.size()/2);
+            rs = (double) (midNumLeftSide + midNumRightSide) / 2;
+        }
+
+        return ResponseEntity.ok(rs);
+    }
+
+    @GetMapping("/ex7")
+    public ResponseEntity<?> findLongestPalindromeLength(@RequestParam String string) {
+        String newStr = string.replace(" ", "").toLowerCase();//! xoa khoang trang,chuyen ve chu thuong
+        //! luu so lan xuat hien tung ky tu
+        int countChar[] = new int[26];
+        for (char c : newStr.toCharArray()) {
+            countChar[c - 'a']++;
+        }
+        //! xac dinh palindrome
+        int palindrome = 0;
+        boolean countFound = false;
+        for (int count : countChar) { //!  xac dinh so ky tu co so lan xuat hien chan
+            if (count % 2 == 0) {
+                palindrome += count;
+            } else {
+                palindrome += count - 1;
+                countFound = true;
+            }
+        }
+        if (countFound) {
+            palindrome += 1;
+        }
+
+        return ResponseEntity.ok(palindrome);
+    }
+
+    @GetMapping("/ex10")
+    public ResponseEntity<?> sortListByStringLenth(@RequestParam List<String> stringList) {
+        Collections.sort(stringList, new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.length() - o2.length();
+            }
+        });
+
+        return ResponseEntity.ok(stringList);
+    }
+}
