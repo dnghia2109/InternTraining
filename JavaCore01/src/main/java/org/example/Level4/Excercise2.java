@@ -31,24 +31,35 @@ public class Excercise2 {
 //    }
 
 
-    public static int countDistinctSubsequences(List<Integer> nums, int target) {
-        int n = nums.size();
-        int[] dp = new int[target + 1];
-        dp[0] = 1;
-
-        for (int num : nums) {
-            for (int j = target; j >= num; j--) {
-                dp[j] += dp[j - num];
-            }
-        }
-
-        return dp[target];
-    }
+//    public static int countDistinctSubsequences(List<Integer> nums, int target) {
+//        int[] dp = new int[target + 1];
+//        dp[0] = 1;
+//
+//        for (int num : nums) {
+//            for (int j = target; j >= num; j--) {
+//                dp[j] += dp[j - num];
+//            }
+//        }
+//
+//        return dp[target];
+//    }
 
     public static void main(String[] args) {
-        List<Integer> nums = new ArrayList<>(List.of(1, 1, 2, 3, 4));
+        List<Integer> listNumber = new ArrayList<>(List.of(1, 1, 2, 3, 4));
         int target = 5;
-        int result = countDistinctSubsequences(nums, target);
-        System.out.println("Number of distinct subsequences with sum " + target + ": " + result);
+        int n = listNumber.size();
+        int[][] dp = new int[n + 1][target + 1];
+        for (int i = 0; i <= n; i++) {
+            dp[i][0] = 1; //! Trường hợp target = 0, tồn tại một dãy rỗng có tổng bằng 0
+        }
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= target; j++) {
+                dp[i][j] = dp[i - 1][j]; //! Không bao gồm phần tử thứ i
+                if (listNumber.get(i - 1) <= j) {
+                    dp[i][j] += dp[i - 1][j - listNumber.get(i - 1)]; //! Bao gồm phần tử thứ i
+                }
+            }
+        }
+        System.out.println( dp[n][target]);
     }
 }

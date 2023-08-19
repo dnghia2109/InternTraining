@@ -8,52 +8,36 @@ public class Excercise7 {
     // Giải thích : palindrome	: Chuỗi ký tự mà đọc xuôi hay ngược đều giống nhau, vd: aba, uwu
     // VD: “A man a plan a canal Panama” 👉 21 (amanaplanacanalpanama)
 
-    // ChatGPT
-//    public static String findLongestPalindrome(String str) {
-//        int n = str.length();
-//        String longestPalindrome = "";
-//
-//        for (int i = 0; i < n; i++) {
-//            // Tìm chuỗi Palindrome bắt đầu từ vị trí i, lớn nhất có thể
-//            String palindrome = expandAroundCenter(str, i, i); // Trường hợp chuỗi có độ dài lẻ
-//            String palindrome2 = expandAroundCenter(str, i, i + 1); // Trường hợp chuỗi có độ dài chẵn
-//
-//            // So sánh và lấy chuỗi Palindrome dài nhất
-//            if (palindrome.length() > longestPalindrome.length()) {
-//                longestPalindrome = palindrome;
-//            }
-//            if (palindrome2.length() > longestPalindrome.length()) {
-//                longestPalindrome = palindrome2;
-//            }
-//        }
-//
-//        return longestPalindrome;
-//    }
-//
-//    public static String expandAroundCenter(String str, int left, int right) {
-//        while (left >= 0 && right < str.length() && str.charAt(left) == str.charAt(right)) {
-//            left--;
-//            right++;
-//        }
-//
-//        // Khi vòng lặp kết thúc, chuỗi Palindrome là str.substring(left + 1, right)
-//        return str.substring(left + 1, right);
-//    }
-//
-//    public static void main(String[] args) {
-//        String input = "babad";
-//        String longestPalindrome = findLongestPalindrome(input);
-//        System.out.println("Chuỗi Palindrome dài nhất trong chuỗi là: " + longestPalindrome);
-//    }
-
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        System.out.print("Enter a string: ");
-        String input = sc.nextLine();
-
-        int longestPalindromeLength = findLongestPalindromeLength(input);
-        System.out.println("Length of the longest palindrome: " + longestPalindromeLength);
+//        Scanner sc = new Scanner(System.in);
+//
+//        System.out.print("Enter a string: ");
+//        String input = sc.nextLine();
+//
+//        int longestPalindromeLength = findLongestPalindromeLength(input);
+//        System.out.println("Length of the longest palindrome: " + longestPalindromeLength);
+        String str = "A man a plan a canal Panama";
+        String newStr = str.replace(" ", "").toLowerCase();//! xoa khoang trang,chuyen ve chu thuong
+        //! luu so lan xuat hien tung ky tu
+        int countChar[] = new int[26];
+        for (char c : newStr.toCharArray()) {
+            countChar[c - 'a']++;
+        }
+        //! xac dinh palindrome
+        int palindrome = 0;
+        boolean countFound = false;
+        for (int count : countChar) { //!  xac dinh so ky tu co so lan xuat hien chan
+            if (count % 2 == 0) {
+                palindrome += count;
+            } else {
+                palindrome += count - 1;
+                countFound = true;
+            }
+        }
+        if (countFound) {
+            palindrome += 1;
+        }
+        System.out.println(palindrome);
     }
 
     public static int findLongestPalindromeLength1(String str) {
