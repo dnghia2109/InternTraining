@@ -1,7 +1,9 @@
 package org.example.Level3;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class Excercise2 {
     // Write a program that takes a list of integers as input
@@ -12,5 +14,6 @@ public class Excercise2 {
         int nums[] = {1, 2, 91, 9, 100, -5};
         Arrays.sort(nums);
         System.out.println("Khoang cach lon nhat cua 2 phan tu trong mang: " + (nums[nums.length-1] - nums[0]));
+
     }
 }

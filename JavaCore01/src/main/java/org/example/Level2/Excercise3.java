@@ -2,7 +2,7 @@ package org.example.Level2;
 
 public class Excercise3 {
     // Write a program that takes two strings as input and returns the longest common subsequence of the two strings.
-    //		VD: đầu vào [“abcdef", “abczyzcdef”], Đầu ra: “cdef"
+    // VD: đầu vào [“abcdef", “abczyzcdef”], Đầu ra: “cdef"
     public static void main(String[] args) {
         String str1 = "abcdef";
         String str2 = "abdabczyzcdef";
@@ -29,5 +29,4 @@ public class Excercise3 {
         String ketQua = str1.substring(endIndex-maxLength+1,endIndex+1);
         System.out.println("Day con chung dai nhat : "+ ketQua);
     }
-
 }

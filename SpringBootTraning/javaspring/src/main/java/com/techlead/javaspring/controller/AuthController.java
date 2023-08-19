@@ -1,10 +1,13 @@
 package com.techlead.javaspring.controller;
 
 
+import com.techlead.javaspring.entity.Role;
 import com.techlead.javaspring.entity.User;
-import com.techlead.javaspring.mapper.UserMapper;
+import com.techlead.javaspring.exception.BadRequestException;
+import com.techlead.javaspring.repository.RoleRepository;
 import com.techlead.javaspring.repository.UserRepository;
 import com.techlead.javaspring.request.LoginRequest;
+import com.techlead.javaspring.request.RegisterRequest;
 import com.techlead.javaspring.security.CustomUserDetailsService;
 import com.techlead.javaspring.security.JwtUtils;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,7 +19,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/auth/")
@@ -30,10 +37,16 @@ public class AuthController {
 
     @Autowired
     private JwtUtils jwtUtils;
+
     @Autowired
     private UserRepository userRepository;
 
-    public static final int MAX_AGE_COOKIE = 7 * 24 * 60 * 60;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
     @PostMapping("login-handle")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpSession session, HttpServletResponse httpServletResponse) {
         // Tạo đối tượng xác thực
@@ -61,13 +74,35 @@ public class AuthController {
 
             return ResponseEntity.ok(jwtToken);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("Email/Password is not correct. Please check again!");
         }
     }
 
-    @GetMapping("/logout-handle")
-    public ResponseEntity<?> logout() {
-        return ResponseEntity.ok("Logout successful");
+
+    // TODO: send token to email
+    @PostMapping("register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
+        if (userOptional.isPresent()) {
+            throw new BadRequestException("Email already exists in the system. Please use another email! ");
+        }
+
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new BadRequestException("Password confirm doesn't match password. Please check again!");
+        }
+
+        Role userRole = roleRepository.findByName("USER").orElse(null);
+
+        User user = new User(null, request.getName(),
+                request.getEmail(), passwordEncoder.encode(request.getPassword()), List.of(userRole)
+        );
+        userRepository.save(user);
+        return ResponseEntity.ok("Register successful!");
     }
+
+//    @GetMapping("/logout-handle")
+//    public ResponseEntity<?> logout() {
+//        return ResponseEntity.ok("Logout successful!");
+//    }
 
 }

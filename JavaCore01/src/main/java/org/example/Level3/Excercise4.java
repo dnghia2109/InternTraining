@@ -1,9 +1,9 @@
 package org.example.Level3;
 
 public class Excercise4 {
-    //Write a program that takes a list of strings as input and returns the two strings with the largest overlap of characters.
-    //		Tìm 2 chuỗi có nhiều số ký tự trùng nhau nhất
-    //VD:["hello", "world", "foobar", "barfoo", "he", "llo"] 👉 ["foobar", "barfoo"]
+    // Write a program that takes a list of strings as input and returns the two strings with the largest overlap of characters.
+    // Tìm 2 chuỗi có nhiều số ký tự trùng nhau nhất
+    // VD:["hello", "world", "foobar", "barfoo", "he", "llo"] 👉 ["foobar", "barfoo"]
     public static void findMostCommonStrings(String[] strings) {
         int maxCount = 0;
         String mostCommon1 = null;

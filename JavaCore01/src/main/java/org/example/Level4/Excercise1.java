@@ -24,7 +24,7 @@ public class Excercise1 {
             }
         }
 
-        for (int i:nums) {
+        for (int i : nums) {
             System.out.print(i + " ");
         }
         System.out.println("\n" + count);
