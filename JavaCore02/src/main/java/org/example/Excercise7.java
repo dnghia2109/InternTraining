@@ -35,6 +35,6 @@ public class Excercise7 {
         for (double point: listPoints) {
             sum += point;
         }
-        return  sum/listPoints.size();
+        return sum / listPoints.size();
     }
 }

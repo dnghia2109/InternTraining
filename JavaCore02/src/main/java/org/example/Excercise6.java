@@ -12,6 +12,7 @@ package org.example;
 public class Excercise6 {
     public static void main(String[] args) {
         int[] prices = {7, 1, 5, 3, 6, 4};
+        int[] prices1 = {1, 1, 1, 1, 1, 1};
         int maxProfit = maxProfit(prices);
         System.out.println(maxProfit);
     }

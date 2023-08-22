@@ -1,4 +1,4 @@
-package com.example.seculogin.exception;
+package com.techlead.javaspring.exception;
 
 public class NotFoundException extends RuntimeException{
     public NotFoundException(String message) {

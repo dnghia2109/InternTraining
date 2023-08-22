@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -63,7 +64,7 @@ public class JwtUtils {
         return extractExpiration(token).before(new Date());
     }
 
-    // Kiểm tra token có chuẩn không (trùng username + chưa hết hạn)
+    // Kiểm tra token có hợp lệ k (trùng username + chưa hết hạn)
     public boolean isTokenValid(String token, UserDetails userDetails) {
         return userDetails.getUsername().equals(extractUsername(token)) && !isTokenExpired(token);
     }
@@ -72,5 +73,23 @@ public class JwtUtils {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+
+    // TODO: refresh token
+    public String refreshToken(String token ) {
+        final Date createdDate = new Date();
+        final Date expirationDate = extractExpiration(String.valueOf(new Date(System.currentTimeMillis() + jwtExpiration)));
+        final Claims claims = extractAllClaims(token);
+        claims.setIssuedAt(new Date(System.currentTimeMillis()));
+        claims.setExpiration(new Date(System.currentTimeMillis() + jwtExpiration));
+
+        return Jwts.builder().setClaims(claims).signWith(getSignInKey()).compact();
+    }
+
+    public Boolean canRefreshToken(String token) {
+
+
+        return true;
     }
 }

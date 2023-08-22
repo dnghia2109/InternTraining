@@ -17,40 +17,40 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         String file = "/Users/nghialai/Desktop/TechLead/InternTraining/JavaCore04_excel/src/main/resources/BangCong.xlsx";
         try {
-            List<Employee> employeeList = workDayAnalysis(file);
+            List<Employee> employeeList = getData(file);
             for (Employee employee : employeeList) {
-                Map<Integer, Double> dailyTotalMoney = new HashMap<>(); // Lưu tổng số tiền cho mỗi ngày
+                //Map<Integer, Double> dailyTotalMoney = new HashMap<>(); // Lưu tổng số tiền cho mỗi ngày
 
-                System.out.println("Nhan vien : " + employee.getName());
-                System.out.println("Ngay lam viec : ");
-                for (WorkDay workDay : employee.getWorkDays()) {
-                    int date = workDay.getDate();
-                    double money = workDay.getMoney();
+                System.out.println("Nhân viên - " + employee.getName());
+                System.out.println("DS các ngày làm việc : ");
+                List<WorkDay> workDayList = employee.getWorkDays();
+                for (WorkDay workDay : workDayList) {
+//                    int date = workDay.getDate();
+//                    double money = workDay.getMoney();
+//                    // Tính tổng số tiền cho mỗi ngày
+//                    if (dailyTotalMoney.containsKey(date)) {
+//                        dailyTotalMoney.put(date, dailyTotalMoney.get(date) + money);
+//                    } else {
+//                        dailyTotalMoney.put(date, money);
+//                    }
 
-                    System.out.println("Ngay : " + workDay.getDate());
-                    System.out.println("Gio : " + workDay.getHours());
+                    System.out.println("Ngày : " + workDay.getDate());
+                    System.out.println("Giờ : " + workDay.getHours());
                     System.out.println("Ca : " + workDay.getShifts());
-                    System.out.printf("Tong tien ca lam viec : %.2f \n", workDay.getMoney());
-                    // Tính tổng số tiền cho mỗi ngày
-                    if (dailyTotalMoney.containsKey(date)) {
-                        dailyTotalMoney.put(date, dailyTotalMoney.get(date) + money);
-                    } else {
-                        dailyTotalMoney.put(date, money);
-                    }
-
+                    System.out.printf("Tổng tiền của ca làm việc: %.2f \n ------ \n", workDay.getMoney());
                 }
 
-                System.out.println("Tong tien moi ngay:");
+                Map<Integer, Double> dailyTotalMoney = getDailyTotalMoney(employee);
+                System.out.println("===== Tổng tiền công mỗi ngày =====");
                 for (Map.Entry<Integer, Double> entry : dailyTotalMoney.entrySet()) {
-                    System.out.println("Ngay " + entry.getKey() + ": " + entry.getValue());
+                    System.out.printf("Ngày %d : %.2f \n" , entry.getKey() , entry.getValue());
                 }
 
-
-                System.out.println("-------------------");
-                System.out.println("Tong tien cac ngay : " + employee.getTotalsMoney());
-                System.out.println("So sanh : " + employee.getCompareTotal());
-                System.out.println("So sanh voi so tong : " + compareDouble(employee.getCompareTotal(), employee.getTotalsMoney(), 0.01));
-                System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++");
+                System.out.println("============================");
+                System.out.println("- Tổng tiền công tính được : " + employee.getTotalsMoney());
+                System.out.println("- Tổng tiền công trong file exel : " + employee.getCompareTotal());
+                System.out.println("- So sánh tiền công tính được với cột tổng lương trong file excel : " + (compareDouble(employee.getCompareTotal(), employee.getTotalsMoney(), 0.01) ? "Trùng khớp" : "Không khớp"));
+                System.out.println("============================");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -58,20 +58,36 @@ public class Main {
 
     }
 
+    public static Map<Integer, Double> getDailyTotalMoney(Employee employee) {
+        Map<Integer, Double> dailyTotalMoney = new HashMap<>();
+        List<WorkDay> workDayList = employee.getWorkDays();
+        for (WorkDay workDay : workDayList) {
+            int date = workDay.getDate();
+            double money = workDay.getMoney();
+            // Tính tổng số tiền cho mỗi ngày
+            if (dailyTotalMoney.containsKey(date)) {
+                dailyTotalMoney.put(date, dailyTotalMoney.get(date) + money);
+            } else {
+                dailyTotalMoney.put(date, money);
+            }
+        }
+        return dailyTotalMoney;
+    }
+
     public static boolean compareDouble(double num1, double num2, double epsilon) {
         return Math.abs(num1 - num2) < epsilon;
     }
 
-    public static List<Employee> workDayAnalysis(String file) throws IOException {
+    public static List<Employee> getData(String file) throws IOException {
         List<Employee> employees = new ArrayList<>();
         FileInputStream fileInputStream = new FileInputStream(new File(file));
         Workbook workbook = new XSSFWorkbook(fileInputStream);
-        Sheet sheet = workbook.getSheetAt(0); // Trang tính đầu tiên trong tệp Excel
+        Sheet sheet = workbook.getSheet("Chấm công");
         Map<Integer, Integer> map1 = new HashMap<>();
         Map<Integer, String> map2 = new HashMap<>();
         Map<String, Integer> map3 = new HashMap<>();
 
-        boolean firstDate = true;
+        boolean isfirstDate = true;
         int index = 0;
         // Lấy thông tin về ngày công
         Row row3 = sheet.getRow(3);
@@ -80,9 +96,9 @@ public class Main {
             Cell cell = row3.getCell(i);
             if (cell != null && cell.getCellType() == CellType.NUMERIC) {
                 day = (int) cell.getNumericCellValue();
-                if (firstDate) {
+                if (isfirstDate) {
                     index = i;
-                    firstDate = false;
+                    isfirstDate = false;
                 }
             }
             map1.put(i, day);
@@ -118,7 +134,7 @@ public class Main {
         }
 
         // Xử lý thông tin của từng nhân viên
-        for (int i = 6; i <= 9; i++) {
+        for (int i = 6; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
             String name = row.getCell(2).getStringCellValue();
             double compareTotal = row.getCell(16).getNumericCellValue();

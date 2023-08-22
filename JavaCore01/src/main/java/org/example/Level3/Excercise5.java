@@ -16,6 +16,7 @@ public class Excercise5 {
     //… Tương tự đến 42 thì không có tập hợp số nào trong mảng là 42=> 42 là kết quả
     public static void main(String[] args) {
         List<Integer> arrNum = new ArrayList<>(List.of(1, 2, 3, 7, 8, 20));
+        List<Integer> arrNum1 = new ArrayList<>(List.of(1, 2, 3, 7, 8, 40));
 
         Collections.sort(arrNum);
         int ketQua = 1;

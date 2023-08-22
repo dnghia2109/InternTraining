@@ -100,9 +100,9 @@ public class AuthController {
         return ResponseEntity.ok("Register successful!");
     }
 
-//    @GetMapping("/logout-handle")
-//    public ResponseEntity<?> logout() {
-//        return ResponseEntity.ok("Logout successful!");
-//    }
+    @GetMapping("/logout-handle")
+    public ResponseEntity<?> logout() {
+        return ResponseEntity.ok("Logout successful!");
+    }
 
 }

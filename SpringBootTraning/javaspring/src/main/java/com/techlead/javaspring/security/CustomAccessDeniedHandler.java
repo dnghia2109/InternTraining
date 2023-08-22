@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-// Xử lý lỗi 403
+// Xử lý lỗi 403: forbidden
 @Component
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override

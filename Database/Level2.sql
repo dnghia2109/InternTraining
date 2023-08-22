@@ -165,6 +165,64 @@ FROM category
 INNER JOIN film_category fc ON category.category_id = fc.category_id
 GROUP BY category.category_id;
 
+
+
+
+WITH customers_rented_action_movies AS (
+SELECT
+	c.customer_id ,
+	concat(c.first_name, ' ', c.last_name) AS full_name
+FROM
+	customer c
+INNER JOIN rental r ON
+	c.customer_id = r.customer_id
+INNER JOIN inventory i ON
+	r.inventory_id = i.inventory_id
+INNER JOIN film f ON
+	i.film_id = f.film_id
+INNER JOIN film_category fc ON
+	f.film_id = fc.film_id
+INNER JOIN category c2 ON
+	fc.category_id = c2.category_id
+WHERE
+	c2.name = 'Action'
+GROUP BY
+	c.customer_id)
+,
+customer_of_each_film AS (
+SELECT
+	f.film_id AS film_id ,
+	f.title ,
+	c.customer_id
+FROM
+	film f
+INNER JOIN inventory i ON
+	f.film_id = i.film_id
+INNER JOIN rental r ON
+	i.inventory_id = r.inventory_id
+INNER JOIN customer c ON
+	r.customer_id = c.customer_id
+GROUP BY
+	f.film_id,
+	f.title ,
+	c.customer_id )
+SELECT
+	f.title
+FROM
+	film f
+WHERE
+	NOT EXISTS ((
+	SELECT
+		customers_rented_action_movies.customer_id
+	FROM
+		customers_rented_action_movies)
+EXCEPT (
+SELECT
+	customer_of_each_film.customer_id
+FROM
+	customer_of_each_film
+WHERE
+	f.film_id = customer_of_each_film.film_id));
 # SELECT f.title
 # FROM film f
 # WHERE NOT EXISTS (

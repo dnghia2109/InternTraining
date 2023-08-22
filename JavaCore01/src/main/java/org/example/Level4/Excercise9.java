@@ -11,9 +11,6 @@ public class Excercise9 {
         int[] nums = {1, 2, 3, 8, 3, 2, 4, 5, 6, 7, 8, 9, 10};
         int count = 0;
         for (int i = 0; i < nums.length - 1; i++) {
-//            if (i == nums.length - 1) {
-//                break;
-//            }
             if (nums[i] < nums[i+1]) {
                 count++;
             } else {

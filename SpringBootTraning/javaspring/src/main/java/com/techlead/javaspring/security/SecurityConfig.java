@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -37,6 +38,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // Provider tìm kiếm user(tìm qua userDetailService) và so sánh password (ss pass qua passEncoder)
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -46,6 +48,7 @@ public class SecurityConfig {
         return provider;
     }
 
+    // authenticationManager sẽ quản lý việc xác thực
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
@@ -55,26 +58,30 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         String[] PUBLIC = {
                 "/",
-                "api/v1/auth/*"
+                "api/v1/auth/*",
+                "api/v1/java03/*",
+                "api/v1/mysql/lv01/*","api/v1/mysql/lv02/*"
         };
         http
             .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers(PUBLIC).permitAll()
                 .requestMatchers("/api/v1/java01/").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/admin").hasRole("ADMIN")
-                .requestMatchers("/author").hasAuthority("ROLE_AUTHOR")
+                .requestMatchers("/api/v1/java02/").hasRole("ADMIN")
+                //.requestMatchers("/api/v1/java03", /api/v1/java04).hasAuthority("ROLE_AUTHOR")
                 .anyRequest().authenticated()
             .and()
                 .logout()
+                .logoutUrl("/logout-handle")
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
-                .deleteCookies("JWT_COOKIE", "JSESSIONID")
+                .deleteCookies("JSESSIONID")
                 .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)))
+                .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
                 .permitAll()
             .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // không sử dụng đến session để lưu session mỗi khi login
             .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(customAuthenticationEntryPoint)

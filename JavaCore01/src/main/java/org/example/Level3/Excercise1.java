@@ -6,12 +6,12 @@ public class Excercise1 {
         int arrNumber[] = {1,2,3,-4,5,6,7,9,8};
         int min = Integer.MAX_VALUE;
         int min2 = Integer.MAX_VALUE;
-        for (int i = 0; i < arrNumber.length ; i++) {
-            if (min > arrNumber[i]){
+        for (int j : arrNumber) {
+            if (min > j) {
                 min2 = min;
-                min = arrNumber[i];
-            } else if (min2 > arrNumber[i] && arrNumber[i] > min) {
-                min2 = arrNumber[i];
+                min = j;
+            } else if (min2 > j && j > min) {
+                min2 = j;
             }
         }
         System.out.println(min);

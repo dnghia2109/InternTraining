@@ -115,15 +115,15 @@ WHERE ad1.city_id = ad2.city_id;
 
 -- 9.Write a SQL query to update the rental rate of all films in the 'Comedy' category that were released in the
 -- year 2007 or later, setting the new rate to be 15% lower than the current rate.
-UPDATE film
-SET rental_rate = rental_rate * 0.85
-WHERE film_id IN (
-    SELECT f2.film_id
-    FROM film f2
-    INNER JOIN film_category fc ON f2.film_id = fc.film_id
-    INNER JOIN category c ON fc.category_id = c.category_id
-    WHERE c.name = 'Comedy' AND YEAR(f2.release_year) >= 2007
-);
+# UPDATE film
+# SET rental_rate = rental_rate * 0.85
+# WHERE film_id IN (
+#     SELECT f2.film_id
+#     FROM film f2
+#     INNER JOIN film_category fc ON f2.film_id = fc.film_id
+#     INNER JOIN category c ON fc.category_id = c.category_id
+#     WHERE c.name = 'Comedy' AND YEAR(f2.release_year) >= 2007
+# );
 
 UPDATE film f
 INNER JOIN (

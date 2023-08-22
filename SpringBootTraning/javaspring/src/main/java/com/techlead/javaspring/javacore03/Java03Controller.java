@@ -13,10 +13,10 @@ public class Java03Controller {
     @Autowired
     private Java03Service java03Service;
 
-    @GetMapping("")
+    @GetMapping("/ex1")
     public ResponseEntity<?> java03(@RequestParam String infixString) {
-
+        String postfix = java03Service.chuyenTrungToSangHauTo(infixString);
         return ResponseEntity.ok("- Infix: " + infixString + "\n- Postfix: " +
-                java03Service.chuyenTrungToSangHauTo(infixString) + "\n");
+                 postfix + "\n- Giá trị :" + java03Service.tinhGiaTri(postfix));
     }
 }

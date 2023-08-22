@@ -20,17 +20,6 @@ import java.util.Scanner;
 public class Excercise8Service {
     public static Scanner sc = new Scanner(System.in);
     public static Map<Integer, Product> productList = new HashMap<>();
-//    public static void main(String[] args) {
-////        initData();
-////        System.out.println(productList);
-////        addProduct();
-////        System.out.println(productList);
-////        findProductById(5);
-////        updateProduct(1);
-////        System.out.println(productList);
-////        deleteProductById(1);
-////        System.out.println(productList);
-//    }
 
     public Excercise8Service() {
         initData();
@@ -87,65 +76,6 @@ public class Excercise8Service {
         }
         productList.remove(id);
     }
-
-//    public static void addProduct() {
-//        System.out.println("=== Nhập thông tin sản phẩm mới ===");
-//        System.out.println("- Nhập tên sản phẩm:");
-//        String productName = sc.nextLine();
-//        System.out.println("- Nhập giá sản phẩm:");
-//        int productPrice = Integer.parseInt(sc.nextLine());
-//        System.out.println("- Nhập số lượng sản phẩm:");
-//        int productQuantity = Integer.parseInt(sc.nextLine());
-//
-//        Product newProduct = new Product(productName, productPrice, productQuantity);
-//        // Id tự tăng nên ko cần checl key(productId) đã tổn tại hay chưa
-//        productList.put(newProduct.getId(), newProduct);
-//    }
-
-//    public static boolean checkProductExist(int id) {
-//        if (productList.containsKey(id)) {
-//            return true;
-//        } else {
-//            System.out.println("Không tìm thấy sp có id - " + id);
-//            return false;
-//        }
-//    }
-//
-//    public static void findProductById(int id) {
-//        if (checkProductExist(id)) {
-//            System.out.println("- Thông tin sp có id - " + id + ":");
-//            System.out.println(productList.get(id));;
-//        }
-//
-//    }
-//
-//    public static void updateProduct1(int id) {
-//        if (checkProductExist(id)) {
-//            Product curProduct = productList.get(id);
-//            System.out.println("- Nhập tên sản phẩm:");
-//            String productName = sc.nextLine();
-//            System.out.println("- Nhập giá sản phẩm:");
-//            int productPrice = Integer.parseInt(sc.nextLine());
-//            System.out.println("- Nhập số lượng sản phẩm:");
-//            int productQuantity = Integer.parseInt(sc.nextLine());
-//
-//            curProduct.setName(productName);
-//            curProduct.setQuantity(productQuantity);
-//            curProduct.setPrice(productPrice);
-//
-//            System.out.println("Sp mới cập nhật - " + curProduct);
-//        }
-//    }
-//
-//    public static void deleteProductById1(int id) {
-//        if (checkProductExist(id)) {
-//            productList.remove(id);
-//            System.out.println("Xóa thành công sp có id - " + id);
-//        }
-//    }
-
-
-
 }
 
 

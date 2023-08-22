@@ -1,6 +1,7 @@
-package com.example.seculogin.exception;
+package com.techlead.javaspring.exception;
 
-import com.example.seculogin.response.ErrorResponse;
+
+import com.techlead.javaspring.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
-    // Xử lý BadRequestException
+
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> handlerBadRequestException(BadRequestException ex) {
@@ -17,7 +18,7 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 
-    // Xử lý NotFoundException
+
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<?> handlerNotFoundException(NotFoundException ex) {
@@ -26,7 +27,7 @@ public class CustomExceptionHandler {
     }
 
 
-    // Xử lý tất cả các exception chưa được khai báo
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<?> handlerException(Exception ex) {

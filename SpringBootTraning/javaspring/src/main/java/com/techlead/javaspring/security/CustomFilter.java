@@ -17,7 +17,6 @@ import java.io.IOException;
 @Component
 @Slf4j
 public class CustomFilter extends OncePerRequestFilter {
-
     @Autowired
     private JwtUtils jwtUtils;
 
@@ -30,7 +29,7 @@ public class CustomFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         log.info("authHeader : {}", authHeader);
 
-        // Kiểm tra xem header có "Authorization" hoặc header có chứa "Bearer" token hay không
+        // Check xem header có "Authorization" hoặc header có chứa "Bearer" token hay không
         if (authHeader == null || !authHeader.contains("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -50,13 +49,11 @@ public class CustomFilter extends OncePerRequestFilter {
             log.info("userDetails : {}", userDetails);
 
             if (jwtUtils.isTokenValid(jwtToken, userDetails)) {
-
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails.getUsername(),
                         null,
                         userDetails.getAuthorities()
                 );
-
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }

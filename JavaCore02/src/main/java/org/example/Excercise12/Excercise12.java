@@ -14,7 +14,7 @@ import java.util.*;
 public class Excercise12 {
     public static List<Product> productList = new ArrayList<>();
     public static void main(String[] args) throws ParseException {
-//        initData();
+        initData();
 //        sortByName();
 //        sortByPrice();
 //        sortByDate();

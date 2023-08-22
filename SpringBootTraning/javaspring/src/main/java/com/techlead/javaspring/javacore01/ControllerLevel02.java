@@ -24,14 +24,6 @@ public class ControllerLevel02 {
             }
         }
 
-//        for (int i = 0; i < nums.size() ; i++) {
-//            if (max < nums.get(i)){
-//                max2 = max;
-//                max = nums.get(i);
-//            } else if (max2 < nums.get(i) &&nums.get(i) < max) {
-//                max2 = nums.get(i);
-//            }
-//        }
         return ResponseEntity.ok(max2);
     }
 
@@ -71,7 +63,7 @@ public class ControllerLevel02 {
                 }
             }
         }
-        String ketQua = str1.substring(endIndex-maxLength+1,endIndex+1);
+        String ketQua = str1.substring(endIndex - maxLength+1,endIndex+1);
         return ResponseEntity.ok(ketQua);
     }
 
