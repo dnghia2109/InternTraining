@@ -25,17 +25,6 @@ public class ControllerLevel03 {
                 min2 = num;
             }
         }
-
-//        int min = Integer.MAX_VALUE;
-//        int min2 = Integer.MAX_VALUE;
-//        for (int i = 0; i < arrNumber.length ; i++) {
-//            if (min > arrNumber[i]){
-//                min2 = min;
-//                min = arrNumber[i];
-//            } else if (min2 > arrNumber[i] && arrNumber[i] > min) {
-//                min2 = arrNumber[i];
-//            }
-//        }
         return ResponseEntity.ok(min2);
     }
 
@@ -56,9 +45,9 @@ public class ControllerLevel03 {
         int n = nums.size();
 
         int[] dp = new int[n]; // Mảng dp để lưu độ dài của LIS tại mỗi vị trí
-        dp[0] = 1; // Mỗi phần tử tạo thành một LIS có độ dài 1 ban đầu
+        dp[0] = 1;
 
-        int maxLen = 1; // Độ dài của chuỗi con tăng dần dài nhất
+        int maxLen = 1;
 
         for (int i = 1; i < n; i++) {
             dp[i] = 1; // Mỗi phần tử tạo thành một LIS có độ dài 1
@@ -108,25 +97,29 @@ public class ControllerLevel03 {
 
     @GetMapping("/ex7")
     public ResponseEntity<?> findLongestPalindromeLength(@RequestParam String string) {
-        String newStr = string.replace(" ", "").toLowerCase();//! xoa khoang trang,chuyen ve chu thuong
-        //! luu so lan xuat hien tung ky tu
+        //     xxabcxycbaxx
+        // chan lay het
+        // le >3  -1  = chan
+        // + 1 lẻ => thành tâm đối xứng
+        String newStr = string.replace(" ", "").toLowerCase();//xóa space, lowercase chuỗi
+        // Số lần xuất hiện mỗi kí tự
         int countChar[] = new int[26];
         for (char c : newStr.toCharArray()) {
             countChar[c - 'a']++;
         }
-        //! xac dinh palindrome
+
         int palindrome = 0;
-        boolean countFound = false;
-        for (int count : countChar) { //!  xac dinh so ky tu co so lan xuat hien chan
+        boolean oddCount = false;
+        for (int count : countChar) {
             if (count % 2 == 0) {
                 palindrome += count;
             } else {
-                palindrome += count - 1;
-                countFound = true;
+                palindrome += count - 1; // nếu kí tự xuất hiên lẻ thì - 1 -> chẵn
+                oddCount = true;
             }
         }
-        if (countFound) {
-            palindrome += 1;
+        if (oddCount) {
+            palindrome += 1; // nếu tồn tại ít nhất 1 kí tự lẻ thì cho phép +1 kí tự
         }
 
         return ResponseEntity.ok(palindrome);

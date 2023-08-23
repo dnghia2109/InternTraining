@@ -60,6 +60,7 @@ public class SecurityConfig {
                 "/",
                 "api/v1/auth/*",
                 "api/v1/java03/*",
+                "api/v1/java04/*",
                 "api/v1/mysql/lv01/*","api/v1/mysql/lv02/*"
         };
         http
@@ -74,8 +75,8 @@ public class SecurityConfig {
                 .logout()
                 .logoutUrl("/logout-handle")
                 .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
+//                .invalidateHttpSession(true)
+//                .deleteCookies("JSESSIONID")
                 .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)))
                 .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
                 .permitAll()

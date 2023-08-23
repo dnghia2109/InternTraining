@@ -22,6 +22,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         ObjectMapper objectMapper = new ObjectMapper();
         String messageJSON = objectMapper.writeValueAsString(message);
 
+        // set trong header "Content-type" của response là "application/json" => response trả về dạng json
         response.addHeader("Content-type", "application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setCharacterEncoding("UTF-8");

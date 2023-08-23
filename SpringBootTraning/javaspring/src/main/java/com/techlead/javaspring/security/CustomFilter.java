@@ -29,7 +29,8 @@ public class CustomFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         log.info("authHeader : {}", authHeader);
 
-        // Check xem header có "Authorization" hoặc header có chứa "Bearer" token hay không
+        // Check xem header có "Authorization" hoặc header có chứa "Bearer" token hay không -
+        // có thể dùng cách này hoặc ignoring để có thể truy cập vào các api ko cần đăng nhập
         if (authHeader == null || !authHeader.contains("Bearer ")) {
             filterChain.doFilter(request, response);
             return;

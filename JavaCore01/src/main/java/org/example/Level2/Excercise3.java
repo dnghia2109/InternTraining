@@ -5,30 +5,7 @@ public class Excercise3 {
     // VD: đầu vào [“abcdef", “abczyzcdef”], Đầu ra: “cdef"
     public static void main(String[] args) {
         String str1 = "abcdef";
-        String str2 = "abdabczyzcdef";
-
-//        int x = str1.length();
-//        int y = str2.length();
-//        int[][] arr = new int[x + 1][y + 1];
-//        int maxLength = 0;
-//        int endIndex = 0;
-//
-//        for (int i = 0; i < str1.length() ; i++) {
-//            for (int j = 1; j <= y; j++) {
-//                if (str1.charAt(i-1) == str2.charAt(j-1)){
-//                    arr[i][j] = arr[i-1][j-1]+1;
-//                    if (arr[i][j] > maxLength){
-//                        maxLength = arr[i][j];
-//                        endIndex = i - 1;
-//                    }
-//                }else {
-//                    arr[i][j] = 0;
-//                }
-//            }
-//        }
-//        String ketQua = str1.substring(endIndex - maxLength + 1, endIndex + 1);
-//        System.out.println("Day con chung dai nhat : "+ ketQua);
-
+        String str2 = "abdaacdef";
 
         // Tạo ma trận dp để lưu độ dài của chuỗi con chung tại mỗi vị trí.
         int[][] dp = new int[str1.length() + 1][str2.length() + 1];
@@ -58,6 +35,6 @@ public class Excercise3 {
         }
 
         // Trích xuất chuỗi con chung dài nhất từ str1 dựa vào độ dài và vị trí kết thúc.
-        System.out.println(str1.substring(endIndex-maxLength, endIndex));
+        System.out.println(str1.substring(endIndex - maxLength, endIndex));
     }
 }

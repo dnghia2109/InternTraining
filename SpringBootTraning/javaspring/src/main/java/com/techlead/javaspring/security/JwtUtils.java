@@ -2,6 +2,7 @@ package com.techlead.javaspring.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,8 @@ public class JwtUtils {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("authorities", userDetails.getAuthorities());
+//        extraClaims.put("email", userDetails.getUsername());
+//        extraClaims.put("password", userDetails.getPassword());
 
         return Jwts.builder()
                 .setClaims(extraClaims)
@@ -38,7 +41,7 @@ public class JwtUtils {
                 .compact();
     }
 
-    // Lấy danh sách claims từ trong token
+    // Lấy danh sách claims từ trong token để lấy đc thông tin user
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignInKey())
@@ -50,6 +53,7 @@ public class JwtUtils {
     // Lấy username của user từ trong token
     public String extractUsername(String token) {
         Claims claims = extractAllClaims(token);
+        //claims.get("email");
         return claims.getSubject();
     }
 
