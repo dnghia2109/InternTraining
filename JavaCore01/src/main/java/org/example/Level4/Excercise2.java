@@ -7,25 +7,8 @@ import java.util.*;
 public class Excercise2 {
     // Write a program that takes a list of integers as input and
     // returns the number of distinct subsequences of the list that sum up to a target value.
-    //VD: 
-    //Đầu vào [1, 2, 3, 4, 5] và 5 👉 2 ( vì 2 + 3 và 1 + 4 bằng 5 )
+    //VD:
     //Đầu vào [1, 1, 2, 3, 4] và 5 👉 4 ( vì 4 tổ hợp có tổng bằng 5 )
-
-
-
-//    public static int countDistinctSubsequences(List<Integer> nums, int target) {
-//        int[] dp = new int[target + 1];
-//        dp[0] = 1;
-//
-//        for (int num : nums) {
-//            for (int j = target; j >= num; j--) {
-//                dp[j] += dp[j - num];
-//            }
-//        }
-//
-//        return dp[target];
-//    }
-
 
     //listNumber: [1, 1, 2, 3, 4]
     //target: 5
