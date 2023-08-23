@@ -16,6 +16,7 @@ public class CustomExceptionHandler {
     public ResponseEntity<?> handlerBadRequestException(BadRequestException ex) {
         ErrorResponse message = new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        // uu
     }
 
 
