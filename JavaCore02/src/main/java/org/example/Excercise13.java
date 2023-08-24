@@ -18,9 +18,6 @@ public class Excercise13 {
         for (int num:nums) {
             if (!uniqueNums.add(num)) {
                 rs.add(num);
-//                if (!rs.contains(num)) {
-//                    rs.add(num);
-//                }
             }
         }
         System.out.println(rs);

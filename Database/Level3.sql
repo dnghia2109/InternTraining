@@ -12,6 +12,17 @@ INNER JOIN film_category fc ON fa.film_id = fc.film_id
 GROUP BY fa.actor_id, fc.category_id;
 
 
+SELECT CONCAT(a.first_name,' ',a.last_name) AS actor_name, c.name AS category_name,
+		AVG(TIMESTAMPDIFF(hour, r.rental_date, r.return_date)) as avg_rental_duration
+FROM actor a JOIN film_actor fa ON a.actor_id = fa.actor_id
+			JOIN film_category fc ON fa.film_id = fc.film_id
+            JOIN category c ON fc.category_id = c.category_id
+            JOIN inventory i ON fc.film_id = i.film_id
+            JOIN rental r ON i.inventory_id = r.inventory_id
+GROUP BY actor_name, category_name
+HAVING COUNT(DISTINCT fc.film_id) > 0;
+
+
 -- 2.Write a SQL query to return the names of all actors who have appeared in a film
 -- with a rating of 'R' and a length of more than 2 hours, but have never appeared in a film with a rating of 'G'.
 SELECT CONCAT(a.first_name, ' ', a.last_name) AS `full_name`
@@ -26,6 +37,8 @@ WHERE f.rating = 'R' AND f.length > 120 AND a.actor_id NOT IN (
     WHERE f.rating = 'G'
     )
 GROUP BY a.actor_id;
+
+
 
 SELECT f.film_id, GROUP_CONCAT(fa.actor_id)
 FROM film f
@@ -54,72 +67,74 @@ INNER JOIN payment p ON r.rental_id = p.rental_id
 GROUP BY c.customer_id,full_name
 HAVING COUNT(r.rental_id) > 10;
 
-
--- 3. danh sách các customer thuê hơn 10 bộ phim 1 ngày
-SELECT c.customer_id, CONCAT(c.first_name,' ',c.last_name) AS full_name, COUNT(p.rental_id)
+SELECT CONCAT(c.first_name, ' ', c.last_name) AS full_name, DATE(r.rental_date), COUNT(*) AS number_films, SUM(p.amount) AS total_rental_fee
 FROM customer c
 INNER JOIN rental r ON c.customer_id = r.customer_id
-INNER JOIN payment p ON r.rental_id = p.rental_id
-INNER JOIN rental r2 ON r.rental_date = r2.rental_date
-WHERE r2.customer_id = c.customer_id
-GROUP BY c.customer_id, full_name;
+INNER JOIN payment p on r.rental_id = p.rental_id
+GROUP BY c.customer_id, DATE(r.rental_date)
+HAVING COUNT(*) > 5;
 
 
-SELECT c.customer_id, c.first_name, c.last_name, DATE(r.rental_date) AS rental_day, COUNT(r.rental_id) AS rental_count
-FROM customer c
-JOIN rental r ON c.customer_id = r.customer_id
-GROUP BY c.customer_id, c.first_name, c.last_name, rental_day
-HAVING rental_count > 3;
-
-select customer_id, group_concat(rental_id)
-from rental
-where DATE(rental_date) = '2005-06-15'
-GROUP BY customer_id;
-
-SELECT c.customer_id, c.first_name, c.last_name, DATE(r1.rental_date) AS rental_day, COUNT(r1.rental_id) AS rental_count
-FROM customer c
-JOIN rental r1 ON c.customer_id = r1.customer_id
-JOIN rental r2 ON r1.rental_id <> r2.rental_id AND DATE(r1.rental_date) = DATE(r2.rental_date) AND c.customer_id = r2.customer_id
-GROUP BY c.customer_id, c.first_name, c.last_name, rental_day
-HAVING rental_count > 3;
-
-
-
+# -- 3. danh sách các customer thuê hơn 10 bộ phim 1 ngày
+# SELECT c.customer_id, CONCAT(c.first_name,' ',c.last_name) AS full_name, COUNT(p.rental_id)
+# FROM customer c
+# INNER JOIN rental r ON c.customer_id = r.customer_id
+# INNER JOIN payment p ON r.rental_id = p.rental_id
+# INNER JOIN rental r2 ON r.rental_date = r2.rental_date
+# WHERE r2.customer_id = c.customer_id
+# GROUP BY c.customer_id, full_name;
+#
+#
+# SELECT c.customer_id, c.first_name, c.last_name, DATE(r.rental_date) AS rental_day, COUNT(r.rental_id) AS rental_count
+# FROM customer c
+# JOIN rental r ON c.customer_id = r.customer_id
+# GROUP BY c.customer_id, c.first_name, c.last_name, rental_day
+# HAVING rental_count > 3;
+#
+# select customer_id, group_concat(rental_id)
+# from rental
+# where DATE(rental_date) = '2005-06-15'
+# GROUP BY customer_id;
+#
+# SELECT c.customer_id, c.first_name, c.last_name, DATE(r1.rental_date) AS rental_day, COUNT(r1.rental_id) AS rental_count
+# FROM customer c
+# JOIN rental r1 ON c.customer_id = r1.customer_id
+# JOIN rental r2 ON r1.rental_id <> r2.rental_id AND DATE(r1.rental_date) = DATE(r2.rental_date) AND c.customer_id = r2.customer_id
+# GROUP BY c.customer_id, c.first_name, c.last_name, rental_day
+# HAVING rental_count > 3;
 
 
 
 -- 4.Write a SQL query to return the names of all customers who have rented every film in a category,
 -- along with the total number of films rented and the total rental fee.
-SELECT c.category_id, GROUP_CONCAT(DISTINCT i.film_id), COUNT(DISTINCT i.film_id)
-FROM category c
-INNER JOIN film_category fc ON c.category_id = fc.category_id
-INNER JOIN inventory i ON fc.film_id = i.film_id
--- INNER JOIN rental r ON i.inventory_id = r.inventory_id
--- INNER JOIN customer c2 ON r.customer_id = c2.customer_id
-GROUP BY c.category_id;
 
-SELECT c.customer_id, GROUP_CONCAT(DISTINCT fc.film_id), COUNT(DISTINCT fc.film_id)
-FROM customer c
-INNER JOIN rental r ON c.customer_id = r.customer_id
-INNER JOIN inventory i ON r.inventory_id = i.inventory_id
-INNER JOIN film_category fc ON i.film_id = fc.film_id
-WHERE fc.category_id = 1
+
+select c.customer_id, GROUP_CONCAT(DISTINCT fc.category_id)
+from customer c
+JOIN rental r ON c.customer_id = r.customer_id
+JOIN inventory i ON r.inventory_id = i.inventory_id
+JOIN film_category fc ON i.film_id = fc.film_id
 GROUP BY c.customer_id;
 
-SELECT CONCAT(c.first_name, ' ', c.last_name) as name
+
+SELECT c.customer_id,
+       CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
+       COUNT(DISTINCT r.inventory_id) AS total_rentals,
+       SUM(p.amount) AS total_payment
 FROM customer c
-INNER JOIN rental r ON c.customer_id = r.customer_id
-INNER JOIN inventory i ON r.inventory_id = i.inventory_id
-INNER JOIN film_category fc ON i.film_id = fc.film_id
-WHERE fc.category_id = 1
+JOIN rental r ON c.customer_id = r.customer_id
+JOIN inventory i ON r.inventory_id = i.inventory_id
+JOIN film_category fc ON i.film_id = fc.film_id
+JOIN payment p ON r.rental_id = p.rental_id
+WHERE fc.category_id = (SELECT category_id FROM category WHERE name = 'Action')
 GROUP BY c.customer_id
-HAVING COUNT(r.rental_id) = (
-    SELECT COUNT(*)
-    FROM film_category fc2
-    INNER JOIN category c2 ON fc2.category_id = c2.category_id
-    WHERE c2.category_id = 1
-    )
-;
+HAVING COUNT(DISTINCT i.film_id) = (
+    SELECT COUNT(fc.film_id)
+    FROM film_category
+    WHERE category_id = (
+        SELECT category_id
+        FROM category
+        WHERE name = 'Action'));
 
 
 -- 5.Write a SQL query to return the titles of all films in the database that have been rented by the same customer
@@ -140,8 +155,18 @@ FROM customer c
 INNER JOIN rental r ON c.customer_id = r.customer_id
 INNER JOIN inventory i ON r.inventory_id = i.inventory_id
 INNER JOIN film f ON i.film_id = f.film_id
-ORDER BY c.customer_id, f.film_id, rental_date;
+GROUP BY c.customer_id, f.film_id, rental_date;
 
+
+
+SELECT CONCAT(c.first_name, ' ', c.last_name) AS full_name, DATE(r.rental_date) AS date_of_renting,
+       f.title , COUNT(*) AS rent_times
+FROM customer c
+INNER JOIN rental r ON c.customer_id = r.customer_id
+INNER JOIN inventory i ON r.inventory_id = i.inventory_id
+INNER JOIN film f ON i.film_id = f.film_id
+GROUP BY c.customer_id, DATE(r.rental_date), f.film_id
+HAVING COUNT(*) > 1;
 
 
 # SELECT STR_TO_DATE('21,5,2013','%d,%m,%Y');
@@ -155,14 +180,10 @@ ORDER BY c.customer_id, f.film_id, rental_date;
 -- every other actor in the database, along with the number of films they appeared in together.
 SELECT f.film_id, group_concat(a.actor_id), count(a.actor_id)
 FROM actor a
-INNER JOIN film_actor fa
-    ON a.actor_id = fa.actor_id
-INNER JOIN film f
-    ON fa.film_id = f.film_id
-INNER JOIN actor a2
-    ON a.actor_id = a2.actor_id
-INNER JOIN film_actor fa2
-    ON a2.actor_id <> fa2.actor_id
+INNER JOIN film_actor fa ON a.actor_id = fa.actor_id
+INNER JOIN film f ON fa.film_id = f.film_id
+INNER JOIN actor a2 ON a.actor_id = a2.actor_id
+INNER JOIN film_actor fa2 ON a2.actor_id <> fa2.actor_id
 -- WHERE a.actor_id
 GROUP BY a.actor_id, f.film_id;
 -- HAVING COUNT(DISTINCT a.actor_id) = (SELECT COUNT(actor_id) FROM actor )
@@ -213,7 +234,7 @@ WHERE r.customer_id NOT IN (
     WHERE f2.rating = 'G'
 )
 GROUP BY f.film_id
-HAVING count(r.rental_id) > 1;
+HAVING count(r.rental_id) > 100;
 
 SELECT r2.customer_id
 FROM rental r2
@@ -257,13 +278,9 @@ WHERE f.rating = 'PG-13'
         FROM actor a
         INNER JOIN film_actor fa ON a.actor_id = fa.actor_id
         INNER JOIN film f ON fa.film_id = f.film_id
-        WHERE f.rating = 'R' AND f.length <90
+        WHERE f.rating = 'R' AND f.length < 90
     )
 GROUP BY a.actor_id;
-
-
-
-
 
 
 

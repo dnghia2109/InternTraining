@@ -14,7 +14,6 @@ LIMIT 10;
 -- 2.Write a SQL query to return the names and contact information of all customers
 -- who have rented films in all categories in the database.
 -- b1: Lấy ra ds các category mà customer đã thuê
-
 SELECT c.customer_id, GROUP_CONCAT(DISTINCT fc.category_id)
 FROM inventory i
 JOIN rental r ON i.inventory_id = r.inventory_id
@@ -22,6 +21,8 @@ JOIN customer c ON r.customer_id = c.customer_id
 JOIN film_category fc ON i.film_id = fc.film_id
 GROUP BY c.customer_id
 HAVING (COUNT(DISTINCT fc.category_id) = (SELECT COUNT(1) FROM category c));
+
+
 
 SELECT c.customer_id AS `id`, CONCAT(c.first_name, ' ', c.last_name) AS `Name`, c.email,
        CONCAT(a2.address, ', ', a2.district) AS `Address`
@@ -135,13 +136,22 @@ WHERE f.film_id NOT IN (
 );
 
 
+-- Sửa lại
+select c.customer_id, concat(c.first_name, ' ', c.last_name) AS full_name
+from customer c
+inner join rental r on c.customer_id = r.customer_id
+inner join inventory i on r.inventory_id = i.inventory_id
+inner join film f on i.film_id = f.film_id
+inner join film_category fc on f.film_id = fc.film_id
+GROUP BY c.customer_id, fc.category_id
+HAVING COUNT(fc.category_id) = 1;
+
+
+
 
 -- 10. Write a SQL query to return the titles of all films in the database that have been rented by
 -- every customer who has ever rented a film from the 'Action' category.
 -- b1: DS khách đã thuê các phim có cate = 'Action'
-
-
-
 WITH cte_film_id AS (
 	SELECT c.customer_id, GROUP_CONCAT(f.film_id) AS 'list_film', GROUP_CONCAT(f.title)
 	FROM customer c

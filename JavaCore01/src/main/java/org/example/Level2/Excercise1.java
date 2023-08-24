@@ -11,7 +11,7 @@ public class Excercise1 {
             if (max < arrNumber[i]){
                 max2 = max;
                 max = arrNumber[i];
-            } else if (max2 < arrNumber[i]) {
+            } else if (max2 < arrNumber[i] && arrNumber[i] < max) {
                 max2 = arrNumber[i];
             }
         }

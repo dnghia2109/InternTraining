@@ -21,16 +21,7 @@ public class Excercise2 {
     //4   1   2   2   3   3   2
     //5   1   2   2   3   3   4
 
-    // dp[i][j] bằng dp[i - 1][j] đại diện cho trường hợp không bao gồm phần tử thứ i trong dãy con có tổng bằng j.
-    // Điều này xảy ra vì dp[i - 1][j] đã chứa toàn bộ các dãy con khác nhau có tổng bằng j mà không sử dụng phần tử thứ i.
-    //
-    // dp[i][j] += dp[i - 1][j - listNumber.get(i - 1)] đại diện cho trường hợp bao gồm phần tử thứ i trong dãy con có tổng bằng j.
-    // Ở đây, listNumber.get(i - 1) đề cập đến giá trị của phần tử thứ i trong danh sách listNumber. j - listNumber.get(i - 1)
-    // tương ứng với tổng cần tạo ra sau khi loại bỏ phần tử thứ i. Và dp[i - 1][j - listNumber.get(i - 1)] đại diện cho số lượng
-    // dãy con khác nhau có tổng bằng j - listNumber.get(i - 1) sử dụng các phần tử từ phần tử đầu đến phần tử thứ i - 1.
-    //
-    // Như vậy, cả hai phần trong công thức dp[i][j] += dp[i - 1][j - listNumber.get(i - 1)] đều tham gia vào việc tính toán số lượng
-    // các dãy con khác nhau có tổng bằng j và bao gồm phần tử thứ i hoặc không.
+
 
     public static void main(String[] args) {
         List<Integer> listNumber = new ArrayList<>(List.of(1, 1, 2, 3, 4));

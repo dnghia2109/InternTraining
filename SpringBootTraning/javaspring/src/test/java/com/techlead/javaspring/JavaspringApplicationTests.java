@@ -4,6 +4,7 @@ import com.techlead.javaspring.entity.Role;
 import com.techlead.javaspring.entity.User;
 import com.techlead.javaspring.repository.RoleRepository;
 import com.techlead.javaspring.repository.UserRepository;
+import com.techlead.javaspring.security.JwtUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,10 @@ class JavaspringApplicationTests {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
 
     @Test
     void save_roles() {
@@ -49,5 +54,15 @@ class JavaspringApplicationTests {
         userRepository.saveAll(users);
     }
 
+    @Test
+    void generateToken() {
+        User user = userRepository.findByEmail("nghia@gmail.com").get();
+        String token = jwtUtils.generateToken(user);
+
+        System.out.println(token);
+    }
+
+//    @Test
+//    void
 
 }

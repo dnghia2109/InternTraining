@@ -20,11 +20,11 @@ public class Excercise11 {
             choice = scanner.nextInt();
             switch (choice){
                 case 1:
-                    System.out.println("- Add word");
+                    System.out.println("- Add word: ");
                     addTuVung();
                     break;
                 case 2:
-                    System.out.println("- Find");
+                    System.out.println("- Find word: ");
                     findTuVung();
                     break;
                 case 3:

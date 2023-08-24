@@ -14,13 +14,13 @@ public class Excercise3 {
             return 0;
         }
 
-        int[] dp = new int[n]; // Mảng dp để lưu độ dài của LIS tại mỗi vị trí
-        dp[0] = 1; // Mỗi phần tử tạo thành một LIS có độ dài 1 ban đầu
+        int[] dp = new int[n]; // Mảng dp để lưu độ dài của chuỗi tại mỗi vị trí
+        dp[0] = 1; // Mỗi phần tử tạo thành một chuỗi có độ dài 1 ban đầu
 
         int maxLen = 1; // Độ dài của chuỗi con tăng dần dài nhất
 
         for (int i = 1; i < n; i++) {
-            dp[i] = 1; // Mỗi phần tử tạo thành một LIS có độ dài 1
+            dp[i] = 1; // Mỗi phần tử tạo thành một chuỗi có độ dài 1
             for (int j = 0; j < i; j++) {
                 if (nums[i] > nums[j]) {
                     dp[i] = Math.max(dp[i], dp[j] + 1);
@@ -33,7 +33,7 @@ public class Excercise3 {
     }
 
     public static void main(String[] args) {
-        int[] numbers = { 10, 22, 9, 33, 21, 50, 41, 60, 80 };
+        int[] numbers = { 3, 10, 2, 1, 20 };
         int lisLength = findLISLength(numbers);
         System.out.println("Độ dài của chuỗi con tăng dần dài nhất là: " + lisLength);
     }

@@ -64,8 +64,9 @@ public class SecurityConfig {
                 "api/v1/mysql/lv01/*","api/v1/mysql/lv02/*"
         };
         http
-            .csrf().disable()
-                .authorizeHttpRequests()
+            .csrf()
+                .disable()
+            .authorizeHttpRequests()
                 .requestMatchers(PUBLIC).permitAll()
                 .requestMatchers("/api/v1/java01/").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/api/v1/java02/").hasRole("ADMIN")

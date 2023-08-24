@@ -35,7 +35,7 @@ public class Excercise7 {
             }
         }
         if (oddCount) {
-            palindrome += 1; // nếu tồn tại ít nhất 1 kí tự lẻ thì cho phép +1 kí tự
+            palindrome += 1; // nếu tồn tại kí tự lẻ thì cho phép +1 kí tự
         }
         System.out.println(palindrome);
     }

@@ -27,26 +27,30 @@ public class Main {
          StringBuilder hauTo = new StringBuilder();
          Stack<Character> stack = new Stack<>();
          for (char c : trungTo.toCharArray()) {
+             // Nếu là toán hạng (số), thêm vào biểu thức hậu tố
              if (Character.isDigit(c)) {
                  hauTo.append(c);
              } else if (kiemTraToanTu(c)) {
-                 while (!stack.isEmpty() && uuTien(stack.peek()) >= uuTien(c)) {
-                     hauTo.append(stack.pop());
+                 while (!stack.isEmpty() && (uuTien(stack.peek()) >= uuTien(c))) {
+                     hauTo.append(stack.pop());  // Đẩy toán tử từ ngăn xếp vào biểu thức hậu tố nếu có mức ưu tiên cao hơn hoặc bằng
                  }
-                 stack.push(c);
+                 stack.push(c);  // Đẩy toán tử hiện tại vào ngăn xếp
              } else if (c == '(') {
-                 stack.push(c);
+                 stack.push(c);  // Nếu là dấu mở ngoặc, đẩy vào ngăn xếp
              } else if (c == ')') {
                  while (!stack.isEmpty() && stack.peek() != '(') {
+                     // Khi gặp dấu đóng ngoặc, đẩy các toán tử từ ngăn xếp vào biểu thức hậu tố cho đến khi gặp dấu mở ngoặc
                      hauTo.append(stack.pop());
                  }
-                 stack.pop();
+                 stack.pop();  // Xóa dấu mở ngoặc khỏi ngăn xếp
              }
          }
+
          while (!stack.empty()) {
-             hauTo.append(stack.pop());
+             hauTo.append(stack.pop());  // Sau khi duyệt hết biểu thức, đẩy các toán tử còn lại từ ngăn xếp vào biểu thức hậu tố
          }
-         return hauTo.toString();
+
+         return hauTo.toString();  // Trả về biểu thức hậu tố tương ứng
      }
 
      private static double tinhGiaTri(String hauTo) {
@@ -71,9 +75,6 @@ public class Main {
                      case '/':
                          ketQua = o2 / o1;
                          break;
-                     case '%':
-                         ketQua = o1 % o2;
-                         break;
                      default:
                          throw new IllegalArgumentException("dau vao ko hop le");
                  }
@@ -84,12 +85,11 @@ public class Main {
      }
 
      public static void main(String[] args) {
-         System.out.println("Nhap vao 1 chuoi");
+         System.out.println("Nhập vào biểu thức: ");
          String x = new Scanner(System.in).nextLine();
          String hauTo = chuyenTrungToSangHauTo(x);
-         System.out.println(hauTo);
-         System.out.println("Ket qua: ");
-         System.out.println(tinhGiaTri(hauTo));
+         System.out.println("=> Chuyển sang hậu tố: " + hauTo);
+         System.out.println("=> Giá trị biểu thức: " + tinhGiaTri(hauTo));
      }
 
 }

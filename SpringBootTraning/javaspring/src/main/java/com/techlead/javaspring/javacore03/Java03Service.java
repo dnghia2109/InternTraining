@@ -24,22 +24,24 @@ public class Java03Service {
     }
 
     public String chuyenTrungToSangHauTo(String trungTo) {
-        StringBuilder hauTo = new StringBuilder();  // Chuỗi để lưu biểu thức hậu tố đang được xây dựng
-        Stack<Character> stack = new Stack<>();  // Ngăn xếp để lưu các toán tử tạm thời
+        StringBuilder hauTo = new StringBuilder();  // StringBuilder để lưu biểu thức hậu tố
+        Stack<Character> stack = new Stack<>();  // stack để lưu các toán tử tạm thời
 
         for (char c : trungTo.toCharArray()) {
+            // Check là số thêm vào biểu thức hậu tố
             if (Character.isDigit(c)) {
-                hauTo.append(c);  // Nếu là toán hạng (số), thêm vào biểu thức hậu tố
+                hauTo.append(c);
             } else if (kiemTraToanTu(c)) {
                 while (!stack.isEmpty() && (uuTien(stack.peek()) >= uuTien(c))) {
-                    hauTo.append(stack.pop());  // Đẩy toán tử từ ngăn xếp vào biểu thức hậu tố nếu có mức ưu tiên cao hơn hoặc bằng
+                    hauTo.append(stack.pop());  // Đẩy toán tử từ ngăn xếp vào hauto nếu có mức ưu tiên cao hơn hoặc bằng
                 }
                 stack.push(c);  // Đẩy toán tử hiện tại vào ngăn xếp
             } else if (c == '(') {
                 stack.push(c);  // Nếu là dấu mở ngoặc, đẩy vào ngăn xếp
             } else if (c == ')') {
                 while (!stack.isEmpty() && stack.peek() != '(') {
-                    hauTo.append(stack.pop());  // Khi gặp dấu đóng ngoặc, đẩy các toán tử từ ngăn xếp vào biểu thức hậu tố cho đến khi gặp dấu mở ngoặc
+                    // Khi gặp dấu đóng ngoặc, đẩy các toán tử từ ngăn xếp vào biểu thức hậu tố cho đến khi gặp dấu mở ngoặc
+                    hauTo.append(stack.pop());
                 }
                 stack.pop();  // Xóa dấu mở ngoặc khỏi ngăn xếp
             }
@@ -49,7 +51,7 @@ public class Java03Service {
             hauTo.append(stack.pop());  // Sau khi duyệt hết biểu thức, đẩy các toán tử còn lại từ ngăn xếp vào biểu thức hậu tố
         }
 
-        return hauTo.toString();  // Trả về biểu thức hậu tố tương ứng
+        return hauTo.toString();
     }
 
     public double tinhGiaTri(String hauTo) {

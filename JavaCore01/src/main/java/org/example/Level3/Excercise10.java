@@ -1,9 +1,6 @@
 package org.example.Level3;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class Excercise10 {
     // Write a program that takes a list of strings as input
@@ -12,13 +9,22 @@ public class Excercise10 {
 
     public static void main(String[] args) {
         List<String> stringList = new ArrayList<>(List.of("apple", "banana", "orange", "kiwi", "strawberry"));
-        Collections.sort(stringList, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return o1.length() - o2.length();
+//        Collections.sort(stringList, new Comparator<String>() {
+//            @Override
+//            public int compare(String o1, String o2) {
+//                return o1.length() - o2.length();
+//            }
+//        });
+        stringList.sort(Comparator.<String>comparingInt( str -> {
+            Set<Character> charSet = new HashSet<>();
+            for (char c : str.toCharArray()) {
+                charSet.add(c);
             }
-        });
+            return charSet.size();
+        }).thenComparingInt(str -> str.length()));
         System.out.println(stringList);
+
+
     }
 
 }
