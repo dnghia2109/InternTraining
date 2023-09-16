@@ -4,25 +4,26 @@ import java.util.List;
 
 
 public class WorkDay {
-    private int date; //! ngay làm việc ( vd: ngày 1, ngày 2,... )
+    private String date; //! ngay làm việc ( vd: ngày 1, ngày 2,... )
     private double hours;   //! gio lam viec
     private List<String> shifts; //! danh sach ca lam viec
-    private double money; //! so tien
+    private double totalMoney; //! so tien
 
+    public WorkDay() {
+    }
 
-
-    public WorkDay(int date, double hours, List<String> shifts, double money) {
+    public WorkDay(String date, double hours, List<String> shifts, double totalMoney) {
         this.date = date;
         this.hours = hours;
         this.shifts = shifts;
-        this.money = money;
+        this.totalMoney = totalMoney;
     }
 
-    public int getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(int date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -43,10 +44,10 @@ public class WorkDay {
     }
 
     public double getMoney() {
-        return money;
+        return totalMoney;
     }
 
-    public void setMoney(double money) {
-        this.money = money;
+    public void setMoney(double totalMoney) {
+        this.totalMoney = totalMoney;
     }
 }

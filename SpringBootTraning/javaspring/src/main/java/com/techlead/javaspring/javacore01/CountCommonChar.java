@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
 public class CountCommonChar {
     public static List<String> findMostCommonStrings(String[] strings) {
         int maxCount = 0;

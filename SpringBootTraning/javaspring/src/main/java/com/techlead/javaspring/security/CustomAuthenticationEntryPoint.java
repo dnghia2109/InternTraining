@@ -15,6 +15,7 @@ import java.io.IOException;
 
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
+    // Khi authen fail sẽ nhảy vào method này để trả về message
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         ErrorResponse message = new ErrorResponse(HttpStatus.UNAUTHORIZED, "Bạn cần đăng nhập");

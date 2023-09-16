@@ -14,7 +14,5 @@ import lombok.Setter;
 public class AuthLoginResponse {
     private UserDto userDto;
     private String token;
-
-    @JsonProperty("isAuthenticated")
     private Boolean isAuthenticated;
 }

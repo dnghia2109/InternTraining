@@ -30,7 +30,7 @@ public class CustomFilter extends OncePerRequestFilter {
         log.info("authHeader : {}", authHeader);
 
         // Check xem header có "Authorization" hoặc header có chứa "Bearer" token hay không -
-        // có thể dùng cách này hoặc ignoring để có thể truy cập vào các api ko cần đăng nhập
+        // có thể dùng cách này hoặc ignoring để có thể truy cập vào các api ko cần authen
         if (authHeader == null || !authHeader.contains("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -44,7 +44,7 @@ public class CustomFilter extends OncePerRequestFilter {
         String userEmail = jwtUtils.extractUsername(jwtToken);
         log.info("userEmail : {}", userEmail);
 
-        // Kiểm tra userEmail -> Tạo đối tượng xác thực
+        // Kiểm tra userEmail -> Kiểm tra token có hợp lệ ko -> Tạo đối tượng xác thực
         if (userEmail != null) {
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(userEmail);
             log.info("userDetails : {}", userDetails);
@@ -55,6 +55,7 @@ public class CustomFilter extends OncePerRequestFilter {
                         null,
                         userDetails.getAuthorities()
                 );
+                // Xác thực thành công, lưu object Authentication vào SecurityContextHolder
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }

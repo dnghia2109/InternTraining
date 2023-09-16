@@ -15,16 +15,29 @@ public class Excercise5 {
     // Số 4 không có trong mảng nó là tổng của 1 và 3 👉 loại 4
     //… Tương tự đến 42 thì không có tập hợp số nào trong mảng là 42=> 42 là kết quả
     public static void main(String[] args) {
-        List<Integer> arrNum = new ArrayList<>(List.of(1, 2, 3, 7, 8, 20));
-
+        List<Integer> arrNum = new ArrayList<>(List.of(0, 1, 3, 4, 5));
         Collections.sort(arrNum);
         int smallest = 1;
+
+
         for (int number : arrNum) {
-            if (number <= smallest) {
+            if (number <= smallest) { // check nếu num > small thì break return small do là số bé nhất có thể tạo đc
                 smallest += number;
             }
         }
         System.out.println(smallest);
+    }
 
+    public static int findPositiveNumNotEqualSumAnyNumInList(List<Integer> arrNum) {
+        Collections.sort(arrNum);
+        int smallest = 1;
+
+
+        for (int number : arrNum) {
+            if (number <= smallest) { // check nếu num > small thì break return small do là số bé nhất có thể tạo đc
+                smallest += number;
+            }
+        }
+        return smallest;
     }
 }

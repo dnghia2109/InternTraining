@@ -2,6 +2,8 @@ USE sakila;
 
 -- 1.Write a SQL query to return the top 10 customers who have generated the most revenue
 -- for the store, including their names and total revenue generated.
+
+-- Output: top10 khách hàng có tổng chi tiêu nhiều nhất, lấy ra tên và tổng chi tiêu mà người đó đã thực hiện
 SELECT c.customer_id, CONCAT(c.first_name, ' ', c.last_name) AS customer_name, SUM(p.amount) AS total_revenue
 FROM customer c
 JOIN payment p ON c.customer_id = p.customer_id
@@ -28,8 +30,8 @@ SELECT c.customer_id AS `id`, CONCAT(c.first_name, ' ', c.last_name) AS `Name`, 
        CONCAT(a2.address, ', ', a2.district) AS `Address`
 FROM customer c
 LEFT JOIN address a2 ON a2.address_id = c.address_id
-# LEFT JOIN city c2 ON a2.city_id = c2.city_id
-# LEFT JOIN country c3 ON c2.country_id = c3.country_id
+LEFT JOIN city c2 ON a2.city_id = c2.city_id
+LEFT JOIN country c3 ON c2.country_id = c3.country_id
 WHERE c.customer_id IN (
 	SELECT c.customer_id
 	FROM inventory i
@@ -43,6 +45,8 @@ WHERE c.customer_id IN (
 
 -- 3. Write a SQL query to return the titles of all films in the database that have been rented
 -- at least once but never returned.
+
+-- Output: title của bộ phim đã được thuê nhưng chưa được trả lại
 SELECT f.title
 FROM film f
 INNER JOIN inventory i ON f.film_id = i.film_id
@@ -54,15 +58,6 @@ WHERE r.return_date IS NULL;
 -- in each category in the database.
 -- b1: lấy ra ds actor có full cate
 
-
-# WITH `temp_cte` AS (
-# 	SELECT fa.actor_id , GROUP_CONCAT(DISTINCT fc.category_id)
-# FROM film_actor fa
-# INNER JOIN film_category fc ON fa.film_id = fc.film_id
-# GROUP BY fa.actor_id
-# HAVING COUNT(DISTINCT fc.category_id) = (SELECT COUNT(1) FROM category c)
-# )
-# SELECT * FROM `temp_cte`;
 SELECT CONCAT(a.first_name, ' ', a.last_name)
 FROM actor a
 WHERE a.actor_id IN (
@@ -110,7 +105,7 @@ GROUP BY a.actor_id;
 
 -- 8.Write a SQL query to return the titles of all films in the database that have been rented by
 -- more than 50 customers, but have never been rented by the same customer more than once.
--- b1: Lấy ds phim đc thuê chỉ 1 lần bởi mỗi khách hàng
+
 SELECT f.title,COUNT(DISTINCT r.customer_id)
 FROM film f
 INNER JOIN inventory i ON f.film_id = i.film_id
@@ -153,7 +148,7 @@ HAVING COUNT(fc.category_id) = 1;
 -- every customer who has ever rented a film from the 'Action' category.
 -- b1: DS khách đã thuê các phim có cate = 'Action'
 WITH cte_film_id AS (
-	SELECT c.customer_id, GROUP_CONCAT(f.film_id) AS 'list_film', GROUP_CONCAT(f.title)
+	SELECT c.customer_id, GROUP_CONCAT(f.film_id) AS 'list_film_id', GROUP_CONCAT(f.title)
 	FROM customer c
 	INNER JOIN rental r ON c.customer_id = r.customer_id
 	INNER JOIN inventory i ON r.inventory_id = i.inventory_id
@@ -177,62 +172,66 @@ GROUP BY category.category_id;
 
 
 
+-- Cách của a Long cho câu 10
+# WITH customers_rented_action_movies AS (
+# SELECT
+# 	c.customer_id ,
+# 	concat(c.first_name, ' ', c.last_name) AS full_name
+# FROM
+# 	customer c
+# INNER JOIN rental r ON
+# 	c.customer_id = r.customer_id
+# INNER JOIN inventory i ON
+# 	r.inventory_id = i.inventory_id
+# INNER JOIN film f ON
+# 	i.film_id = f.film_id
+# INNER JOIN film_category fc ON
+# 	f.film_id = fc.film_id
+# INNER JOIN category c2 ON
+# 	fc.category_id = c2.category_id
+# WHERE
+# 	c2.name = 'Action'
+# GROUP BY
+# 	c.customer_id)
+# ,
+# customer_of_each_film AS (
+# SELECT
+# 	f.film_id AS film_id ,
+# 	f.title ,
+# 	c.customer_id
+# FROM
+# 	film f
+# INNER JOIN inventory i ON
+# 	f.film_id = i.film_id
+# INNER JOIN rental r ON
+# 	i.inventory_id = r.inventory_id
+# INNER JOIN customer c ON
+# 	r.customer_id = c.customer_id
+# GROUP BY
+# 	f.film_id,
+# 	f.title ,
+# 	c.customer_id )
+# SELECT
+# 	f.title
+# FROM
+# 	film f
+# WHERE
+# 	NOT EXISTS ((
+# 	SELECT
+# 		customers_rented_action_movies.customer_id
+# 	FROM
+# 		customers_rented_action_movies)
+# EXCEPT (
+# SELECT
+# 	customer_of_each_film.customer_id
+# FROM
+# 	customer_of_each_film
+# WHERE
+# 	f.film_id = customer_of_each_film.film_id));
 
-WITH customers_rented_action_movies AS (
-SELECT
-	c.customer_id ,
-	concat(c.first_name, ' ', c.last_name) AS full_name
-FROM
-	customer c
-INNER JOIN rental r ON
-	c.customer_id = r.customer_id
-INNER JOIN inventory i ON
-	r.inventory_id = i.inventory_id
-INNER JOIN film f ON
-	i.film_id = f.film_id
-INNER JOIN film_category fc ON
-	f.film_id = fc.film_id
-INNER JOIN category c2 ON
-	fc.category_id = c2.category_id
-WHERE
-	c2.name = 'Action'
-GROUP BY
-	c.customer_id)
-,
-customer_of_each_film AS (
-SELECT
-	f.film_id AS film_id ,
-	f.title ,
-	c.customer_id
-FROM
-	film f
-INNER JOIN inventory i ON
-	f.film_id = i.film_id
-INNER JOIN rental r ON
-	i.inventory_id = r.inventory_id
-INNER JOIN customer c ON
-	r.customer_id = c.customer_id
-GROUP BY
-	f.film_id,
-	f.title ,
-	c.customer_id )
-SELECT
-	f.title
-FROM
-	film f
-WHERE
-	NOT EXISTS ((
-	SELECT
-		customers_rented_action_movies.customer_id
-	FROM
-		customers_rented_action_movies)
-EXCEPT (
-SELECT
-	customer_of_each_film.customer_id
-FROM
-	customer_of_each_film
-WHERE
-	f.film_id = customer_of_each_film.film_id));
+
+
+
 # SELECT f.title
 # FROM film f
 # WHERE NOT EXISTS (

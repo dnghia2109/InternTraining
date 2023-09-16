@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,14 +40,13 @@ public class SecurityConfig {
     }
 
     // Provider tìm kiếm user(tìm qua userDetailService) và so sánh password (ss pass qua passEncoder)
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(customUserDetailsService);
-
-        return provider;
-    }
+//    @Bean
+//    public AuthenticationProvider authenticationProvider(AuthenticationManagerBuilder auth) throws Exception {
+//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+//        provider.setPasswordEncoder(passwordEncoder());
+//        provider.setUserDetailsService(customUserDetailsService);
+//        return provider;
+//    }
 
     // authenticationManager sẽ quản lý việc xác thực
     @Bean
@@ -58,6 +58,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         String[] PUBLIC = {
                 "/",
+                "/roles",
                 "api/v1/auth/*",
                 "api/v1/java03/*",
                 "api/v1/java04/*",
@@ -89,8 +90,10 @@ public class SecurityConfig {
                 .authenticationEntryPoint(customAuthenticationEntryPoint)
                 .accessDeniedHandler(customAccessDeniedHandler)
             .and()
-                .authenticationProvider(authenticationProvider())
                 .addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
+
+// @Configuration dùng để đánh dấu một class là một class cấu hình và cho phép sử dụng @Bean để tạo các bean tùy chỉnh.
+// @Bean dùng trong một class cấu hình (@Configuration) để xác định một phương thức tạo và cấu hình một bean cụ thể.

@@ -1,24 +1,32 @@
 package org.example;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class Employee {
     private String name;
     private double compareTotal;
     private List<WorkDay> workDays = new ArrayList<>();
-    private double totalsMoney;
+    private double totalMoney;
+
+    public Employee(String name, double compareTotal) {
+    }
 //    private double moneyPerDay;
 
-    public Employee() {
-    }
-
-    public Employee(String name, double compareTotal, List<WorkDay> workDays, double totalsMoney) {
-        this.name = name;
-        this.compareTotal = compareTotal;
-        this.workDays = workDays;
-        this.totalsMoney = totalsMoney;
-    }
+//    public Employee() {
+//    }
+//
+//    public Employee(String name, double compareTotal, List<WorkDay> workDays, double totalMoney) {
+//        this.name = name;
+//        this.compareTotal = compareTotal;
+//        this.workDays = workDays;
+//        this.totalMoney = totalMoney;
+//    }
 
     public String getName() {
         return name;
@@ -45,17 +53,16 @@ public class Employee {
     }
 
     public double getTotalsMoney() {
-        return totalsMoney;
+        return totalMoney;
     }
 
     public void setTotalsMoney(double totalsMoney) {
-        this.totalsMoney = totalsMoney;
+        this.totalMoney = totalsMoney;
     }
 
     public void addWorkDay(WorkDay workDay) {
         this.workDays.add(workDay);
-        totalsMoney += workDay.getMoney();
-
+        totalMoney += workDay.getMoney();
     }
 
 

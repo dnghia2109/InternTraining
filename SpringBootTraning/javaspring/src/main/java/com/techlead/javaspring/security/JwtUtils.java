@@ -27,6 +27,7 @@ public class JwtUtils {
 
     // Tạo token từ thông tin của user
     public String generateToken(UserDetails userDetails) {
+        // có thể thêm nd vào claim tùy ý
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("authorities", userDetails.getAuthorities());
 //        extraClaims.put("email", userDetails.getUsername());
@@ -37,7 +38,7 @@ public class JwtUtils {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                .signWith(getSignInKey())
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -50,7 +51,7 @@ public class JwtUtils {
                 .getBody();
     }
 
-    // Lấy username của user từ trong token
+    // Lấy username(email) của user từ trong token
     public String extractUsername(String token) {
         Claims claims = extractAllClaims(token);
         //claims.get("email");
@@ -81,19 +82,19 @@ public class JwtUtils {
 
 
     // TODO: refresh token
-    public String refreshToken(String token ) {
-        final Date createdDate = new Date();
-        final Date expirationDate = extractExpiration(String.valueOf(new Date(System.currentTimeMillis() + jwtExpiration)));
-        final Claims claims = extractAllClaims(token);
-        claims.setIssuedAt(new Date(System.currentTimeMillis()));
-        claims.setExpiration(new Date(System.currentTimeMillis() + jwtExpiration));
-
-        return Jwts.builder().setClaims(claims).signWith(getSignInKey()).compact();
-    }
-
-    public Boolean canRefreshToken(String token) {
-
-
-        return true;
-    }
+//    public String refreshToken(String token ) {
+//        final Date createdDate = new Date();
+//        final Date expirationDate = extractExpiration(String.valueOf(new Date(System.currentTimeMillis() + jwtExpiration)));
+//        final Claims claims = extractAllClaims(token);
+//        claims.setIssuedAt(new Date(System.currentTimeMillis()));
+//        claims.setExpiration(new Date(System.currentTimeMillis() + jwtExpiration));
+//
+//        return Jwts.builder().setClaims(claims).signWith(getSignInKey()).compact();
+//    }
+//
+//    public Boolean canRefreshToken(String token) {
+//
+//
+//        return true;
+//    }
 }

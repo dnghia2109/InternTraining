@@ -12,15 +12,15 @@ import java.util.List;
 //["abcd", "ab", "abcd", "ab", "abcd"] => 2
 public class Excercise3 {
     public static void main(String[] args) {
-        List<String> stringList = new ArrayList<>(List.of("abcdefg", "abcde", "abcdef", "abcd", "abc"));
-        //! tim chuoi ngan nhat
+        List<String> stringList = new ArrayList<>(List.of("bcdefg", "abcde", "abcdef", "abcd", "abc"));
+        // tim chuoi ngan nhat
         String minStr = stringList.get(0);
         for (String str : stringList) {
             if (str.length() < minStr.length()) {
                 minStr = str;
             }
         }
-        //! tim do dai chuoi con chung dai nhat
+        // tim do dai chuoi con chung dai nhat
         int maxLength = 0;
         for (int i = 0; i < minStr.length(); i++) {
             for (int j = i + 1; j <= minStr.length(); j++) {

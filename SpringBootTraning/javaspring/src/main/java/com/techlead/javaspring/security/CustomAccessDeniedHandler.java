@@ -18,7 +18,7 @@ import java.io.IOException;
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        // Tạo object
+        // Tạo object trả veef message
         ErrorResponse message = new ErrorResponse(HttpStatus.FORBIDDEN, "Bạn không có quyền");
 
         // Convert Object -> Json

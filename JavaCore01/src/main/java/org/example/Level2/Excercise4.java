@@ -13,4 +13,24 @@ public class Excercise4 {
         }
         System.out.println(sum);
     }
+
+    public static int sumNumDivisibleBoth3And5(double[] nums) {
+        int sum = 0;
+        for (double num : nums) {
+            if ((num % 3 == 0) && (num % 5== 0)) {
+                sum += num;
+            }
+        }
+        return sum;
+    }
+
+    // Có thể dùng stream
+    // int[] newArr = Arrays.stream(nums)
+    //        .filter(num -> num % 3 == 0 && num % 5 == 0)
+    //        .toArray();
+    //
+    //
+    // for (int num : newArr) {
+    //        sum += num;
+    //    }
 }

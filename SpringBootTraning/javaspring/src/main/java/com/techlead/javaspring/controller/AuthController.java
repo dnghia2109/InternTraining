@@ -24,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.annotation.Documented;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,10 +59,11 @@ public class AuthController {
         );
 
         try {
-            // Tiến hành xác thực
+            // Tiến hành xác thực -> sẽ gọi đến UserDetailService để xác thực username và password đã mã hóa trog db
+            // -> Xác thực fail trả ra message tbao
             Authentication authentication = authenticationManager.authenticate(token);
 
-            // Lưu dữ liệu vào context
+            // Xác thực thành công -> Lưu dữ liệu vào context
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // Lấy ra thông tin của user
@@ -70,7 +72,7 @@ public class AuthController {
             // Tạo ra token
             String jwtToken = jwtUtils.generateToken(userDetails);
 
-            // Tìm kiếm user
+            // Tìm kiếm user (optional, thêm đoạn này chỉdddeer trả ra thông tin user login, chỉ cần return jwt là đủ)
             User user = userRepository.findByEmail(authentication.getName()).orElse(null);
 
             //return ResponseEntity.ok(jwtToken);
@@ -79,6 +81,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Email/Password is not correct. Please check again!");
         }
     }
+
 
     @PostMapping("register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
@@ -93,10 +96,15 @@ public class AuthController {
 
         Role userRole = roleRepository.findByName("USER").orElse(null);
 
-        User user = new User(null, request.getName(),
-                request.getEmail(), passwordEncoder.encode(request.getPassword()), List.of(userRole)
-        );
-        userRepository.save(user);
+        User user1 = User.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .roles(List.of(userRole))
+                .build();
+
+
+        userRepository.save(user1);
         return ResponseEntity.ok("Register successful!");
     }
 

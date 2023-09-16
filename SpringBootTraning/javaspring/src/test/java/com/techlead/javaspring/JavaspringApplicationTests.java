@@ -2,6 +2,8 @@ package com.techlead.javaspring;
 
 import com.techlead.javaspring.entity.Role;
 import com.techlead.javaspring.entity.User;
+import com.techlead.javaspring.javacore02.Excercise8.Excercise8Service;
+import com.techlead.javaspring.javacore02.Excercise8.ProductRequest;
 import com.techlead.javaspring.repository.RoleRepository;
 import com.techlead.javaspring.repository.UserRepository;
 import com.techlead.javaspring.security.JwtUtils;
@@ -24,8 +26,17 @@ class JavaspringApplicationTests {
     @Autowired
     private UserRepository userRepository;
 
+
+
     @Autowired
     private JwtUtils jwtUtils;
+    @Autowired
+    private Excercise8Service excercise8Service;
+
+//    @Test
+//    void add_product() {
+//        ProductRequest productRequest =
+//    }
 
 
     @Test

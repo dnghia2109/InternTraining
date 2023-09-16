@@ -9,11 +9,11 @@ public class Excercise10 {
 
     public static void main(String[] args) {
         int k = 3;
-        List<String> stringList = new ArrayList<>(List.of("abcdf", "bcdegh", "cdefij", "cdefghi"));
+        List<String> stringList = new ArrayList<>(List.of("abcdf", "bcdegh", "bcdegh", "cdefij", "cdefghi"));
         List<String> subStrings = new ArrayList<>(); //! danh sach chua cac chuoi con
         for (String str : stringList) {
             for (int i = 0; i <= str.length() - k; i++) {
-                subStrings.add(str.substring(i, i + k)); //! cac chuoi con có do dai it nhat = k thi nem vao subStrings
+                subStrings.add(str.substring(i, i + k)); //! cac chuoi con có do dai = k thi nem vao subStrings
             }
         }
 
@@ -34,20 +34,22 @@ public class Excercise10 {
             }
         }
         System.out.println("Chuối con xuaats hiện nhiều nhất: " + maxSubString);
-        List<String> ketQua = new ArrayList<>(); //! danh sach chua 2 chuoi con trung nhau lon nhat
+        //! danh sach chua 2 chuoi con trung nhau lon nhat
+        // Nế
         int count = 0;
+        HashSet<String> result = new HashSet<>();
         for (String string: stringList) {
             if (count == 2) {
                 break;
             }
-            if (string.contains(maxSubString)) {
-                ketQua.add(string);
+            if (string.contains(maxSubString) && result.add(string)) {
                 count++;
             }
 
         }
-        System.out.println(ketQua);
+        System.out.println(result);
     }
+
 }
 
 

@@ -7,14 +7,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        String file = "/Users/nghialai/Desktop/TechLead/InternTraining/JavaCore04_excel/src/main/resources/BangCong.xlsx";
+        String file = "/Users/nghialai/Desktop/TechLead/InternTraining/JavaCore04_excel/src/main/resources/BangCong3.xlsx";
         try {
             List<Employee> employeeList = getData(file);
             for (Employee employee : employeeList) {
@@ -23,40 +20,54 @@ public class Main {
                 System.out.println("Nhân viên - " + employee.getName());
                 System.out.println("DS các ngày làm việc : ");
                 for (WorkDay workDay : employee.getWorkDays()) {
-                    int date = workDay.getDate();
-
-                    double money = workDay.getMoney();
-
                     System.out.println("Ngày : " + workDay.getDate());
                     System.out.println("Giờ : " + workDay.getHours());
                     System.out.println("Ca : " + workDay.getShifts());
                     System.out.printf("Tổng tiền của ca làm việc: %.2f \n ------ \n", workDay.getMoney());
                 }
 
-                Map<Integer, Double> dailyTotalMoney = getDailyTotalMoney(employee);
+                Map<String, Double> dailyTotalMoney = getDailyTotalMoney(employee);
                 System.out.println("===== Tổng tiền công mỗi ngày =====");
-                for (Map.Entry<Integer, Double> entry : dailyTotalMoney.entrySet()) {
-                    System.out.printf("Ngày %d : %.2f \n" , entry.getKey() , entry.getValue());
+                for (Map.Entry<String, Double> entry : dailyTotalMoney.entrySet()) {
+                    System.out.printf("Ngày %s : %.2f \n" , entry.getKey() , entry.getValue());
                 }
 
                 System.out.println("============================");
                 System.out.println("- Tổng tiền công tính được : " + employee.getTotalsMoney());
                 System.out.println("- Tổng tiền công trong file exel : " + employee.getCompareTotal());
                 System.out.println("- So sánh tiền công tính được với cột tổng lương trong file excel : " +
-                        (compareDouble(employee.getCompareTotal(), employee.getTotalsMoney()) ? "Trùng khớp" : "Không khớp"));
+                        (compareTotalMoney(employee.getCompareTotal(), employee.getTotalsMoney()) ? "Trùng khớp" : "Không khớp"));
                 System.out.println("============================");
             }
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("Không tìm thấy file!");
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
     }
 
-    public static Map<Integer, Double> getDailyTotalMoney(Employee employee) {
-        Map<Integer, Double> dailyTotalMoney = new HashMap<>();
+//    public static Map<String, String> getShiftsPerDay(Employee employee) {
+//        Map<String, List<String>> shiftsPerDay = new HashMap<>();
+//        List<WorkDay> workDayList = employee.getWorkDays();
+//        for (WorkDay workDay : workDayList) {
+//            String date = workDay.getDate();
+//            String shiftName = workDay.getShifts().get(0);
+//            List<String> value = shiftsPerDay.get(date).stream().toList();
+//            if (shiftsPerDay.containsKey(date)) {
+//                shiftsPerDay.put(date, value.add(shiftName));
+//            } else {
+//                dailyTotalMoney.put(date, money);
+//            }
+//        }
+//        return shiftsPerDay;
+//    }
+
+    public static Map<String, Double> getDailyTotalMoney(Employee employee) {
+        Map<String, Double> dailyTotalMoney = new HashMap<>();
         List<WorkDay> workDayList = employee.getWorkDays();
         for (WorkDay workDay : workDayList) {
-            int date = workDay.getDate();
+            String date = workDay.getDate();
             double money = workDay.getMoney();
             // Tính tổng số tiền cho mỗi ngày
             if (dailyTotalMoney.containsKey(date)) {
@@ -68,11 +79,11 @@ public class Main {
         return dailyTotalMoney;
     }
 
-    public static boolean compareDouble(double num1, double num2 ) {
-        return Math.abs(num1 - num2) < 0.1 ? true : false;
+    public static boolean compareTotalMoney(double num1, double num2 ) {
+        return Math.abs(num1 - num2) < 0.001;
     }
 
-    public static List<Employee> getData(String file) throws IOException {
+    public static List<Employee> getData(String file) throws Exception {
         List<Employee> employees = new ArrayList<>();
         FileInputStream fileInputStream = new FileInputStream(new File(file));
         Workbook workbook = new XSSFWorkbook(fileInputStream);
@@ -127,12 +138,12 @@ public class Main {
             }
         }
 
-        // Xử lý thông tin của từng nhân viên
+        // Xử lý thông tin của từng nhân viên ver1
         for (int i = 6; i <= sheet.getLastRowNum(); i++) {
             Row row = sheet.getRow(i);
-            if (row.getCell(0).getNumericCellValue() != 0) {
+            if (row.getCell(0).getNumericCellValue() != 0 && row.getCell(0).getCellType() != CellType.BLANK) {
                 String name = row.getCell(2).getStringCellValue();
-                double compareTotal = row.getCell(16).getNumericCellValue();
+                double compareTotal = row.getCell(index - 1).getNumericCellValue();
                 Employee employee = new Employee(name, compareTotal, new ArrayList<>(), 0);
 
                 for (int j = index; j < row.getLastCellNum(); j++) {
@@ -143,7 +154,7 @@ public class Main {
                         List<String> dayShifts = new ArrayList<>();
 
                         if (hours > 0) {
-                            int date = map1.get(j);
+                            String date = String.valueOf(map1.get(j));
                             String shift = map2.get(j); // lấy ra tên ca (idShift ở map2) theo key là index j
                             dayShifts.add(shift);
 

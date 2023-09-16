@@ -31,7 +31,7 @@ public class Excercise7 {
     }
 
     public static int countDistinctWords(String str) {
-        String[] words = str.split(" "); // tach chuoi thanh mang
+        String[] words = str.split(" "); // Tách chuỗi
         return (int) Arrays.stream(words).distinct().count();
     }
 }

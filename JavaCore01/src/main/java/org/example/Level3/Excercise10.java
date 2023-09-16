@@ -15,6 +15,7 @@ public class Excercise10 {
 //                return o1.length() - o2.length();
 //            }
 //        });
+
         stringList.sort(Comparator.<String>comparingInt( str -> {
             Set<Character> charSet = new HashSet<>();
             for (char c : str.toCharArray()) {
@@ -24,7 +25,22 @@ public class Excercise10 {
         }).thenComparingInt(str -> str.length()));
         System.out.println(stringList);
 
+    }
 
+    public static List<String> sortByNumberOfDistinctCharacter(List<String> stringList) {
+        if (stringList.isEmpty()) {
+            return stringList;
+        }
+
+        stringList.sort(Comparator.<String>comparingInt( str -> {
+            Set<Character> charSet = new HashSet<>();
+            for (char c : str.toCharArray()) {
+                charSet.add(c);
+            }
+            return charSet.size();
+        }).thenComparingInt(str -> str.length()));
+
+        return stringList;
     }
 
 }

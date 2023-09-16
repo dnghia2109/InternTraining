@@ -24,7 +24,7 @@ public class Java03Service {
     }
 
     public String chuyenTrungToSangHauTo(String trungTo) {
-        StringBuilder hauTo = new StringBuilder();  // StringBuilder để lưu biểu thức hậu tố
+        StringBuilder hauTo = new StringBuilder();  // StringBuilder để lưu biểu thức hậu tố (nên sd StringBuilder hown String )
         Stack<Character> stack = new Stack<>();  // stack để lưu các toán tử tạm thời
 
         for (char c : trungTo.toCharArray()) {

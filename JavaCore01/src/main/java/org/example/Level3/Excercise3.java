@@ -31,10 +31,16 @@ public class Excercise3 {
 
         return maxLen;
     }
-
     public static void main(String[] args) {
         int[] numbers = { 3, 10, 2, 1, 20 };
         int lisLength = findLISLength(numbers);
         System.out.println("Độ dài của chuỗi con tăng dần dài nhất là: " + lisLength);
     }
+
+// [1 , 0 , 0 , 0 , 0 ]
+// [1 , 2 , 0 , 0 , 0 ]
+// [1 , 2 , 1 , 0 , 0 ]
+// [1 , 2 , 1 , 1 , 0 ]
+// [1 , 2 , 1 , 1 , 3 ]
+
 }

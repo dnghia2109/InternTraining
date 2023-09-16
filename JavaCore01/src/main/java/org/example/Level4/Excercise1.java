@@ -12,6 +12,14 @@ public class Excercise1 {
     }
 
     private static void bubbleSort(int[] nums) {
+        if (nums.length == 0) {
+            throw new IllegalArgumentException("Mảng cần ít nhất 1 phần tử");
+        }
+
+        if (nums.length < 2) {
+            System.out.println(nums[0]);
+        }
+
         int count = 0;
         for (int i = 0; i < nums.length; i++) {
             for (int j = i + 1; j < nums.length - 1; j++) {

@@ -3,7 +3,8 @@ USE sakila;
 -- 1.Write a SQL query to return the average rental duration for each combination of actor and
 -- category in the database, excluding actors who have not appeared in any films in a category.
 
--- ?????????
+-- Lấy ra DS thời gian thuê trung bình giữa mỗi diễn viên với mỗi category,
+-- ko tiính các diễn viên chưa xuất hiện trong bộ phim nào của category đó (xuất hiện ít nhất trong 1 bộ phim)
 SELECT fa.actor_id, fc.category_id
 FROM actor a
 INNER JOIN film_actor fa ON a.actor_id = fa.actor_id
@@ -14,18 +15,19 @@ GROUP BY fa.actor_id, fc.category_id;
 
 SELECT CONCAT(a.first_name,' ',a.last_name) AS actor_name, c.name AS category_name,
 		AVG(TIMESTAMPDIFF(hour, r.rental_date, r.return_date)) as avg_rental_duration
-FROM actor a JOIN film_actor fa ON a.actor_id = fa.actor_id
-			JOIN film_category fc ON fa.film_id = fc.film_id
-            JOIN category c ON fc.category_id = c.category_id
-            JOIN inventory i ON fc.film_id = i.film_id
-            JOIN rental r ON i.inventory_id = r.inventory_id
+FROM actor a
+JOIN film_actor fa ON a.actor_id = fa.actor_id
+JOIN film_category fc ON fa.film_id = fc.film_id
+JOIN category c ON fc.category_id = c.category_id
+JOIN inventory i ON fc.film_id = i.film_id
+JOIN rental r ON i.inventory_id = r.inventory_id
 GROUP BY actor_name, category_name
 HAVING COUNT(DISTINCT fc.film_id) > 0;
 
 
 -- 2.Write a SQL query to return the names of all actors who have appeared in a film
 -- with a rating of 'R' and a length of more than 2 hours, but have never appeared in a film with a rating of 'G'.
-SELECT CONCAT(a.first_name, ' ', a.last_name) AS `full_name`
+SELECT  CONCAT(a.first_name, ' ', a.last_name) AS `full_name`
 FROM actor a
 INNER JOIN film_actor fa ON a.actor_id = fa.actor_id
 INNER JOIN film f ON fa.film_id = f.film_id
@@ -35,27 +37,31 @@ WHERE f.rating = 'R' AND f.length > 120 AND a.actor_id NOT IN (
     INNER JOIN film_actor fa ON a.actor_id = fa.actor_id
     INNER JOIN film f ON fa.film_id = f.film_id
     WHERE f.rating = 'G'
-    )
+)
 GROUP BY a.actor_id;
 
-
-
-SELECT f.film_id, GROUP_CONCAT(fa.actor_id)
-FROM film f
-JOIN film_actor fa ON f.film_id = fa.film_id
-WHERE f.rating = 'G'
-GROUP BY f.film_id;
-
+# SELECT f.film_id, GROUP_CONCAT(fa.actor_id)
+# FROM film f
+# JOIN film_actor fa ON f.film_id = fa.film_id
+# WHERE f.rating = 'G'
+# GROUP BY f.film_id;
 
 -- Cách 2:
-# SELECT DISTINCT CONCAT(a.first_name, ' ', a.last_name) AS full_name
-# FROM actor a
-# JOIN film_actor fa ON a.actor_id = fa.actor_id
-# JOIN film f ON fa.film_id = f.film_id where f.rating = 'R' AND f.length > 120
-# AND NOT EXISTS (SELECT 1 FROM film f2 JOIN film_actor fa2 ON f2.film_id = fa2.film_id
-#     JOIN actor a2 ON fa2.actor_id = a2.actor_id
-#     WHERE f2.rating = 'G' AND a.actor_id = a2.actor_id
-# );
+SELECT DISTINCT CONCAT(a.first_name, ' ', a.last_name) AS full_name
+FROM actor a
+JOIN film_actor fa ON a.actor_id = fa.actor_id
+JOIN film f ON fa.film_id = f.film_id where f.rating = 'R' AND f.length > 120
+AND NOT EXISTS (
+    SELECT 1
+    FROM film f2
+    JOIN film_actor fa2 ON f2.film_id = fa2.film_id
+    JOIN actor a2 ON fa2.actor_id = a2.actor_id
+    WHERE f2.rating = 'G' AND a.actor_id = a2.actor_id
+);
+
+CREATE TABLE staff (
+	id TINYINT 
+)
 
 
 -- 3.Write a SQL query to return the names of all customers who have rented more than 10 films
@@ -146,8 +152,7 @@ INNER JOIN inventory i ON r.inventory_id = i.inventory_id
 INNER JOIN film f ON i.film_id = f.film_id
 -- WHERE DATE(r.rental_date) = STR_TO_DATE('22,8,2005','%d,%m,%Y')
 GROUP BY c.customer_id, f.film_id
-HAVING COUNT(r.rental_id) > 1
-;
+HAVING COUNT(r.rental_id) > 1;
 
 
 SELECT c.customer_id, f.film_id, r.rental_date
